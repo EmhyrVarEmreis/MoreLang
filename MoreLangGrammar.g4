@@ -10,10 +10,13 @@ bodyBlock :
     BRACKET_BRACE_OP body BRACKET_BRACE_CLOSE;
 
 programHeader :
-    (ctrlImport)+;
+    (ctrlImport)+ ctrlModuleName;
+
+ctrlModuleName :
+    CTRL_MODULE ID SEMICOLON;
 
 ctrlImport:
-    CTRL_IMPORT ID SEMICOLON;
+    CTRL_IMPORT ID (CTRL_DOT ID)* SEMICOLON;
 
 statement :
     ((expression | returnStatement) SEMICOLON) | definition | ifStatement | whileLoop;
@@ -28,7 +31,7 @@ definition :
     CTRL_DEF (variableDefinition | functionDefinition);
 
 variableDefinition :
-    type ID TAB_SUFFIX? expression SEMICOLON;
+    type identifier TAB_SUFFIX? expression SEMICOLON;
 
 value :
     VAL_STRING | VAL_INT | VAL_FLOAT;
@@ -46,22 +49,28 @@ simpleExpression :
     atomicExpression | (BRACKET_PAREN_OP expression BRACKET_PAREN_CLOSE);
 
 atomicExpression:
-    value | ID | functionInvocation;
-
-functionInvocation:
-    functionHeader;
+    value | identifier | functionInvocation;
 
 assigment :
-    ID (BRACKET_SQUARE_OP VAL_INT BRACKET_SQUARE_CLOSE)? EQUAL expression;
+    identifier (BRACKET_SQUARE_OP VAL_INT BRACKET_SQUARE_CLOSE)? EQUAL expression;
 
 functionDefinition :
     functionHeader bodyBlock;
 
+functionInvocation:
+    identifier functionArgs;
+
 functionHeader :
-    ID BRACKET_PAREN_OP ((expression) (COMMA expression)*)? BRACKET_PAREN_CLOSE;
+    type identifier functionArgs;
+
+functionArgs :
+    BRACKET_PAREN_OP ((expression) (COMMA expression)*)? BRACKET_PAREN_CLOSE;
+
+identifier:
+    ID;
 
 type:
-    (INT | FLOAT | STRING) TAB_SUFFIX?;
+    ((INT | FLOAT | STRING) TAB_SUFFIX?) | VOID;
 
 operator :
     OP_PLUS | OP_MINUS | OP_DIVIDE | OP_MULTIPLY | OP_COMPARE | OP_COMPARE_NEG | OP_AND | OP_OR;
@@ -71,10 +80,12 @@ operator :
 INT                     :   'int';
 FLOAT                   :   'float';
 STRING                  :   'string';
+VOID                    :   'void';
 TAB_SUFFIX              :   '[]';
 
 // control sequences
 CTRL_IMPORT             :   'import';
+CTRL_MODULE             :   'module';
 CTRL_DEF                :   'def';
 CTRL_RETURN             :   'return';
 CTRL_IF                 :   'if';
@@ -110,5 +121,5 @@ BRACKET_SQUARE_CLOSE    :   ']';
 
 ID                      :   [a-zA-Z][a-zA-Z0-9]*;
 
-WS                      : (' '|'\r'|'\n') -> skip;
-COMMENT                 : ( '//' ~[\r\n]* '\r'? '\n' | '/*' .*? '*/' ) -> skip;
+WS                      :   (' '|'\r'|'\n') -> skip;
+COMMENT                 :   ( '//' ~[\r\n]* '\r'? '\n' | '/*' .*? '*/' ) -> skip;
