@@ -1,0 +1,10 @@
+import ppp;
+
+module main;
+
+def int function(a,b) {
+    def int c 5;
+    return a*b+c;
+}
+
+function(1,1);

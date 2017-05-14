@@ -1,6 +1,11 @@
 grammar MoreLangGrammar;
 
-program :
+@header {
+    import xyz.morecraft.dev.lang.morelang.object.Program;
+    import xyz.morecraft.dev.lang.morelang.object.Statement;
+}
+
+program:
     programHeader? body;
 
 body :
