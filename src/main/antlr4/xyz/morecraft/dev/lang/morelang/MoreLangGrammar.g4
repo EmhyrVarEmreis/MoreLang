@@ -6,7 +6,10 @@ grammar MoreLangGrammar;
 }
 
 program:
-    programHeader? body;
+    programHeader? programBody;
+
+programBody :
+    (SEMICOLON | statement | functionDefinition)+;
 
 body :
     (SEMICOLON | statement)+;
@@ -18,21 +21,21 @@ programHeader :
     (ctrlImport)+;
 
 ctrlImport:
-    CTRL_IMPORT ID (CTRL_DOT ID)* SEMICOLON;
+    CTRL_IMPORT ctrlImportName SEMICOLON;
+
+ctrlImportName:
+    ID (CTRL_DOT ID)*;
 
 statement :
-    ((expression | returnStatement) SEMICOLON) | definition | ifStatement | whileLoop;
+    ((assignmentStatement | returnStatement | functionInvocationStatement) SEMICOLON) | variableDefinitionStatement | ifStatement | whileLoopStatement;
 
 ifStatement :
     CTRL_IF BRACKET_PAREN_OP expression BRACKET_PAREN_CLOSE bodyBlock (CTRL_ELSE (bodyBlock | ifStatement))?;
 
-whileLoop :
+whileLoopStatement :
     CTRL_WHILE BRACKET_PAREN_OP expression BRACKET_PAREN_CLOSE bodyBlock;
 
-definition :
-    variableDefinition | functionDefinition;
-
-variableDefinition :
+variableDefinitionStatement :
     typedIdentifier TAB_SUFFIX? (EQUAL expression)? SEMICOLON;
 
 value :
@@ -42,7 +45,7 @@ returnStatement :
     CTRL_RETURN expression?;
 
 expression :
-   assigment | atomicExpression | arithmeticExpression;
+   assignmentStatement | atomicExpression | arithmeticExpression;
 
 arithmeticExpression :
     (simpleExpression (operator simpleExpression)+);
@@ -51,25 +54,31 @@ simpleExpression :
     atomicExpression | (BRACKET_PAREN_OP expression BRACKET_PAREN_CLOSE);
 
 atomicExpression:
-    value | identifier | functionInvocation;
+    value | variable | functionInvocationStatement;
 
-assigment :
-    identifier (BRACKET_SQUARE_OP VAL_INT BRACKET_SQUARE_CLOSE)? EQUAL expression;
+assignmentStatement :
+    variable (BRACKET_SQUARE_OP VAL_INT BRACKET_SQUARE_CLOSE)? EQUAL expression;
 
 functionDefinition :
-    functionHeader bodyBlock;
+    functionDefinitionHeader bodyBlock;
 
-functionInvocation:
-    identifier functionArgs;
+functionInvocationStatement:
+    identifier BRACKET_PAREN_OP functionInvocationArguments BRACKET_PAREN_CLOSE;
 
-functionHeader :
-    typedIdentifier BRACKET_PAREN_OP ((typedIdentifier) (COMMA (typedIdentifier))*)? BRACKET_PAREN_CLOSE;
+functionDefinitionHeader :
+    typedIdentifier BRACKET_PAREN_OP functionDefinitionHeaderArguments BRACKET_PAREN_CLOSE;
 
-functionArgs :
-    BRACKET_PAREN_OP ((expression) (COMMA expression)*)? BRACKET_PAREN_CLOSE;
+functionDefinitionHeaderArguments:
+    ((typedIdentifier) (COMMA (typedIdentifier))*)?;
+
+functionInvocationArguments :
+    ((value | variable) (COMMA (value | variable) )*)?;
 
 typedIdentifier:
     type identifier;
+
+variable:
+    identifier (BRACKET_SQUARE_OP expression BRACKET_SQUARE_CLOSE)?;
 
 identifier:
     ID;
@@ -81,13 +90,6 @@ operator :
     OP_PLUS | OP_MINUS | OP_DIVIDE | OP_MULTIPLY | OP_COMPARE | OP_COMPARE_NEG | OP_AND | OP_OR;
 
 
-// types
-INT                     :   'int';
-FLOAT                   :   'float';
-STRING                  :   'string';
-VOID                    :   'void';
-TAB_SUFFIX              :   '[]';
-
 // control sequences
 CTRL_IMPORT             :   'import';
 CTRL_RETURN             :   'return';
@@ -95,6 +97,13 @@ CTRL_IF                 :   'if';
 CTRL_ELSE               :   'else';
 CTRL_WHILE              :   'while';
 CTRL_DOT                :   '.';
+
+// types
+INT                     :   'int';
+FLOAT                   :   'float';
+STRING                  :   'string';
+VOID                    :   'void';
+TAB_SUFFIX              :   '[]';
 
 // operations
 OP_PLUS                 :   '+';

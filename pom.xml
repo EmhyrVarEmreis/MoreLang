@@ -58,6 +58,7 @@
                 <version>4.5</version>
                 <configuration>
                     <outputDirectory>target/generated-sources/java</outputDirectory>
+                    <visitor>true</visitor>
                 </configuration>
                 <executions>
                     <execution>
