@@ -15,10 +15,7 @@ bodyBlock :
     BRACKET_BRACE_OP body BRACKET_BRACE_CLOSE;
 
 programHeader :
-    (ctrlImport)+ ctrlModuleName;
-
-ctrlModuleName :
-    CTRL_MODULE ID SEMICOLON;
+    (ctrlImport)+;
 
 ctrlImport:
     CTRL_IMPORT ID (CTRL_DOT ID)* SEMICOLON;
@@ -33,16 +30,16 @@ whileLoop :
     CTRL_WHILE BRACKET_PAREN_OP expression BRACKET_PAREN_CLOSE bodyBlock;
 
 definition :
-    CTRL_DEF (variableDefinition | functionDefinition);
+    variableDefinition | functionDefinition;
 
 variableDefinition :
-    type identifier TAB_SUFFIX? expression SEMICOLON;
+    typedIdentifier TAB_SUFFIX? (EQUAL expression)? SEMICOLON;
 
 value :
     VAL_STRING | VAL_INT | VAL_FLOAT;
 
 returnStatement :
-    CTRL_RETURN expression;
+    CTRL_RETURN expression?;
 
 expression :
    assigment | atomicExpression | arithmeticExpression;
@@ -66,10 +63,13 @@ functionInvocation:
     identifier functionArgs;
 
 functionHeader :
-    type identifier functionArgs;
+    typedIdentifier BRACKET_PAREN_OP ((typedIdentifier) (COMMA (typedIdentifier))*)? BRACKET_PAREN_CLOSE;
 
 functionArgs :
     BRACKET_PAREN_OP ((expression) (COMMA expression)*)? BRACKET_PAREN_CLOSE;
+
+typedIdentifier:
+    type identifier;
 
 identifier:
     ID;
@@ -90,8 +90,6 @@ TAB_SUFFIX              :   '[]';
 
 // control sequences
 CTRL_IMPORT             :   'import';
-CTRL_MODULE             :   'module';
-CTRL_DEF                :   'def';
 CTRL_RETURN             :   'return';
 CTRL_IF                 :   'if';
 CTRL_ELSE               :   'else';

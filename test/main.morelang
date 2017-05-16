@@ -1,0 +1,12 @@
+import ppp;
+
+int a;
+
+a = 4;
+
+int function(int a, int b) {
+    int c = 5;
+    return a*b+c;
+}
+
+function(a,1);
