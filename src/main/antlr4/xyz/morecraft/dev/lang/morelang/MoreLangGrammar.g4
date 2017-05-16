@@ -6,25 +6,31 @@ grammar MoreLangGrammar;
 }
 
 program:
-    programHeader? body;
-
-body :
-    (SEMICOLON | statement)+;
-
-bodyBlock :
-    BRACKET_BRACE_OP body BRACKET_BRACE_CLOSE;
+    programHeader? module+;
 
 programHeader :
-    (ctrlImport)+ ctrlModuleName;
-
-ctrlModuleName :
-    CTRL_MODULE ID SEMICOLON;
+    (ctrlImport)+;
 
 ctrlImport:
     CTRL_IMPORT ID (CTRL_DOT ID)* SEMICOLON;
 
+module :
+    CTRL_MODULE ID moduleBodyBlock;
+
+moduleBodyBlock :
+    BRACKET_BRACE_OP moduleBody BRACKET_BRACE_CLOSE;
+
+moduleBody :
+    (variableDefinitionWithModifier | functionDefinition)+;
+
+bodyBlock :
+    BRACKET_BRACE_OP body BRACKET_BRACE_CLOSE;
+
+body :
+    statement+;
+
 statement :
-    ((expression | returnStatement) SEMICOLON) | definition | ifStatement | whileLoop;
+    ((expression | returnStatement) SEMICOLON) | variableDefinition | ifStatement | whileLoop;
 
 ifStatement :
     CTRL_IF BRACKET_PAREN_OP expression BRACKET_PAREN_CLOSE bodyBlock (CTRL_ELSE (bodyBlock | ifStatement))?;
@@ -32,17 +38,17 @@ ifStatement :
 whileLoop :
     CTRL_WHILE BRACKET_PAREN_OP expression BRACKET_PAREN_CLOSE bodyBlock;
 
-definition :
-    CTRL_DEF (variableDefinition | functionDefinition);
+variableDefinitionWithModifier:
+    modifier variableDefinition;
 
 variableDefinition :
-    type identifier TAB_SUFFIX? expression SEMICOLON;
+    typedIdentifier TAB_SUFFIX? (EQUAL expression)? SEMICOLON;
 
 value :
     VAL_STRING | VAL_INT | VAL_FLOAT;
 
 returnStatement :
-    CTRL_RETURN expression;
+    CTRL_RETURN expression?;
 
 expression :
    assigment | atomicExpression | arithmeticExpression;
@@ -66,13 +72,19 @@ functionInvocation:
     identifier functionArgs;
 
 functionHeader :
-    type identifier functionArgs;
+    modifier typedIdentifier BRACKET_PAREN_OP ((typedIdentifier) (COMMA (typedIdentifier))*)? BRACKET_PAREN_CLOSE;
 
 functionArgs :
     BRACKET_PAREN_OP ((expression) (COMMA expression)*)? BRACKET_PAREN_CLOSE;
 
+typedIdentifier:
+    type identifier;
+
 identifier:
     ID;
+
+modifier:
+    MOD_PRIVATE | MOD_PUBLIC;
 
 type:
     ((INT | FLOAT | STRING) TAB_SUFFIX?) | VOID;
@@ -97,6 +109,10 @@ CTRL_IF                 :   'if';
 CTRL_ELSE               :   'else';
 CTRL_WHILE              :   'while';
 CTRL_DOT                :   '.';
+
+// modifiers
+MOD_PRIVATE             :   'private';
+MOD_PUBLIC              :   'public';
 
 // operations
 OP_PLUS                 :   '+';
