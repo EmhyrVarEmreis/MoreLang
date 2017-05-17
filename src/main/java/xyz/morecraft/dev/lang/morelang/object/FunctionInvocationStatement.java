@@ -14,4 +14,9 @@ public class FunctionInvocationStatement extends Statement {
     private String name;
     private List<Variable> argumentExpressionList;
 
+    @Override
+    public String llvm() {
+        return null;
+    }
+
 }

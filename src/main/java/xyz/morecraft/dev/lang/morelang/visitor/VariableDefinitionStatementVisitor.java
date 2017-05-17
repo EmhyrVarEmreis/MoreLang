@@ -1,8 +1,6 @@
 package xyz.morecraft.dev.lang.morelang.visitor;
 
 import xyz.morecraft.dev.lang.morelang.MoreLangGrammarParser;
-import xyz.morecraft.dev.lang.morelang.object.Type;
-import xyz.morecraft.dev.lang.morelang.object.TypedIdentifier;
 import xyz.morecraft.dev.lang.morelang.object.VariableDefinition;
 import xyz.morecraft.dev.lang.morelang.visitor.proto.MoreLangGrammarBaseVisitorCustom;
 
@@ -10,12 +8,9 @@ public class VariableDefinitionStatementVisitor extends MoreLangGrammarBaseVisit
 
     @Override
     public VariableDefinition visitVariableDefinitionStatement(MoreLangGrammarParser.VariableDefinitionStatementContext ctx) {
-        MoreLangGrammarParser.TypedIdentifierContext typedIdentifierContext = ctx.typedIdentifier();
+        TypedIdentifierVisitor typedIdentifierVisitor = new TypedIdentifierVisitor();
         return new VariableDefinition(
-                new TypedIdentifier(
-                        typedIdentifierContext.identifier().getText(),
-                        Type.of(typedIdentifierContext.type().getText())
-                )
+                ctx.typedIdentifier().accept(typedIdentifierVisitor)
         );
     }
 

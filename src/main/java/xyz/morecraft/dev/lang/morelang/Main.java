@@ -6,6 +6,9 @@ import xyz.morecraft.dev.lang.morelang.object.Program;
 import xyz.morecraft.dev.lang.morelang.visitor.ProgramVisitor;
 
 import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Collections;
 
 public class Main {
 
@@ -13,17 +16,23 @@ public class Main {
         MoreLangGrammarLexer lexer = new MoreLangGrammarLexer(new ANTLRInputStream(new FileReader(args[0])));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         MoreLangGrammarParser parser = new MoreLangGrammarParser(tokens);
-        MoreLangCustomGrammarListener listener = new MoreLangCustomGrammarListener();
-        parser.addParseListener(listener);
 //        parser.program();
 
-        if (parser.getNumberOfSyntaxErrors() > 0 || listener.isError()) {
+        if (parser.getNumberOfSyntaxErrors() > 0) {
             System.err.println("Aborting due to errors");
             return;
         }
 
         Program program = new ProgramVisitor().visit(parser.program());
         System.out.println(program.toString());
+
+        System.out.println();
+
+        String llvm = program.llvm();
+
+        System.out.println(llvm);
+
+        Files.write(Paths.get(args[0].replace(".morelang", "") + ".ll"), Collections.singletonList(llvm));
     }
 
 }

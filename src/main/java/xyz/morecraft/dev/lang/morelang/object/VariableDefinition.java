@@ -12,4 +12,10 @@ public class VariableDefinition extends Definition {
     public VariableDefinition(TypedIdentifier typedIdentifier) {
         super(typedIdentifier);
     }
+
+    @Override
+    public String llvm() {
+        return "%" + getTypedIdentifier().getName() + " = alloca " + getTypedIdentifier().getType().getSimpleType().getLlvm() + ", align 4";
+    }
+
 }

@@ -9,7 +9,7 @@ program:
     programHeader? programBody;
 
 programBody :
-    (SEMICOLON | statement | functionDefinition)+;
+    (SEMICOLON | functionDefinition)+;
 
 body :
     (SEMICOLON | statement)+;
@@ -27,7 +27,7 @@ ctrlImportName:
     ID (CTRL_DOT ID)*;
 
 statement :
-    ((assignmentStatement | returnStatement | functionInvocationStatement) SEMICOLON) | variableDefinitionStatement | ifStatement | whileLoopStatement;
+    ((assignmentStatement | functionInvocationStatement) SEMICOLON) | variableDefinitionStatement | ifStatement | whileLoopStatement;
 
 ifStatement :
     CTRL_IF BRACKET_PAREN_OP expression BRACKET_PAREN_CLOSE bodyBlock (CTRL_ELSE (bodyBlock | ifStatement))?;
@@ -60,7 +60,7 @@ assignmentStatement :
     variable (BRACKET_SQUARE_OP VAL_INT BRACKET_SQUARE_CLOSE)? EQUAL expression;
 
 functionDefinition :
-    functionDefinitionHeader bodyBlock;
+    functionDefinitionHeader BRACKET_BRACE_OP body returnStatement SEMICOLON BRACKET_BRACE_CLOSE;
 
 functionInvocationStatement:
     identifier BRACKET_PAREN_OP functionInvocationArguments BRACKET_PAREN_CLOSE;

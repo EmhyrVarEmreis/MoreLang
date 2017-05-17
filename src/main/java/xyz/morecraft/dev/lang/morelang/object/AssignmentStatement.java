@@ -14,4 +14,9 @@ public class AssignmentStatement extends Statement {
     private Variable variable;
     private Expression expression;
 
+    @Override
+    public String llvm() {
+        return null;
+    }
+
 }

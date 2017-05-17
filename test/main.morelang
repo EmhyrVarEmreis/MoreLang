@@ -1,12 +1,16 @@
-import util.tool;
+int fun(int a, int b) {
+    ;
+    return a;
+}
 
-int a;
-
-a = 4;
-
-int function(int a, int b) {
+int function(float a, int b) {
     int c = 5;
     return a*b+c;
 }
 
-function(a,1);
+int main() {
+    int a;
+    a = 4;
+    a = function(a, 1);
+    return a;
+}
