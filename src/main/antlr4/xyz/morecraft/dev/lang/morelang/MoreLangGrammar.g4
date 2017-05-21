@@ -38,6 +38,9 @@ whileLoopStatement :
 variableDefinitionStatement :
     typedIdentifier TAB_SUFFIX? (EQUAL expression)? SEMICOLON;
 
+assignmentStatement :
+    variable (BRACKET_SQUARE_OP VAL_INT BRACKET_SQUARE_CLOSE)? EQUAL expression;
+
 value :
     VAL_STRING | VAL_INT | VAL_FLOAT;
 
@@ -45,19 +48,13 @@ returnStatement :
     CTRL_RETURN expression?;
 
 expression :
-   assignmentStatement | atomicExpression | arithmeticExpression;
-
-arithmeticExpression :
-    (simpleExpression (operator simpleExpression)+);
-
-simpleExpression :
-    atomicExpression | (BRACKET_PAREN_OP expression BRACKET_PAREN_CLOSE);
+    expression operator expression
+    | '(' expression ')'
+    | atomicExpression
+    | assignmentStatement;
 
 atomicExpression:
     value | variable | functionInvocationStatement;
-
-assignmentStatement :
-    variable (BRACKET_SQUARE_OP VAL_INT BRACKET_SQUARE_CLOSE)? EQUAL expression;
 
 functionDefinition :
     functionDefinitionHeader BRACKET_BRACE_OP body returnStatement SEMICOLON BRACKET_BRACE_CLOSE;
