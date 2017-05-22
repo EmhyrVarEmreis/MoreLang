@@ -1,5 +1,6 @@
 package xyz.morecraft.dev.lang.morelang;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import xyz.morecraft.dev.lang.morelang.object.Program;
@@ -25,6 +26,12 @@ public class Main {
 
         Program program = new ProgramVisitor().visit(parser.program());
         System.out.println(program.toString());
+
+        System.out.println();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(program));
 
         System.out.println();
 

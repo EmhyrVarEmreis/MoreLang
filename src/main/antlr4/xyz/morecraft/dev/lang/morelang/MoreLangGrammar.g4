@@ -48,10 +48,9 @@ returnStatement :
     CTRL_RETURN expression?;
 
 expression :
-    expression operator expression
-    | '(' expression ')'
-    | atomicExpression
-    | assignmentStatement;
+    expression operator expression #biExpression
+    | '(' expression ')' #parenExpression
+    | atomicExpression #smallExpression;
 
 atomicExpression:
     value | variable | functionInvocationStatement;
