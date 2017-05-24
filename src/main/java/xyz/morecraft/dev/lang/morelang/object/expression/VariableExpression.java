@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.Type;
 import xyz.morecraft.dev.lang.morelang.object.Variable;
+import xyz.morecraft.dev.lang.morelang.object.statement.AssignmentStatement;
 import xyz.morecraft.dev.lang.morelang.object.statement.Statement;
 
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ public class VariableExpression extends Expression {
         } else {
             setAlias("%" + variable.getName());
         }
+
+        functionContextRegistry.registerType(getRawAlias(), requiredType);
 
         return lines;
     }

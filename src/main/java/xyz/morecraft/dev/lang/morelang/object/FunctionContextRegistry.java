@@ -21,6 +21,7 @@ public class FunctionContextRegistry {
         this.variableTypesMap = new HashMap<>();
         this.typedIdentifierNameMap = new HashMap<>();
         for (TypedIdentifier typedIdentifier : argumentList) {
+            typedIdentifier.getType().setPointer(true);
             registerType(typedIdentifier);
         }
     }

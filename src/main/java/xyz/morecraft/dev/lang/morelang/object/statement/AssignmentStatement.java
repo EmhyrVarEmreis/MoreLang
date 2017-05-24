@@ -5,8 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
+import xyz.morecraft.dev.lang.morelang.object.Type;
 import xyz.morecraft.dev.lang.morelang.object.Variable;
-import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
 
 import java.util.ArrayList;
@@ -23,7 +23,15 @@ public class AssignmentStatement extends Statement {
 
     @Override
     public List<String> llvm(FunctionContextRegistry functionContextRegistry) {
-        return new ArrayList<>();
+        List<String> lines = new ArrayList<>();
+
+        Type type = functionContextRegistry.getType(variable.getName());
+
+        lines.addAll(expression.llvm(functionContextRegistry, type, this, null));
+
+        lines.add("store " + type.getSimpleType().getLlvm() + " " + expression.getAlias() + ", " + type.getSimpleType().getLlvm() + "* %" + variable.getName() + ", align 4");
+
+        return lines;
     }
 
 }
