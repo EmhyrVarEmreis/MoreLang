@@ -1,9 +1,17 @@
-package xyz.morecraft.dev.lang.morelang.object;
+package xyz.morecraft.dev.lang.morelang.object.statement.definition;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import xyz.morecraft.dev.lang.morelang.object.ProgramRegistry;
+import xyz.morecraft.dev.lang.morelang.object.TypedIdentifier;
+import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
+import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
+import xyz.morecraft.dev.lang.morelang.object.statement.Statement;
+import xyz.morecraft.dev.lang.morelang.object.statement.definition.Definition;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Data
@@ -13,19 +21,24 @@ public class FunctionDefinition extends Definition {
     private List<TypedIdentifier> argumentList;
     private List<Statement> statementList = new ArrayList<>();
     private Expression returnStatement;
-    private Map<TypedIdentifier, String> aliasesMap;
-    private int temporaryVariableCounter = 0;
+    private FunctionContextRegistry functionContextRegistry;
 
     public FunctionDefinition(TypedIdentifier typedIdentifier, List<TypedIdentifier> argumentList, List<Statement> statementList, Expression returnStatement) {
         super(typedIdentifier);
         this.argumentList = Objects.isNull(argumentList) ? new ArrayList<>() : argumentList;
         this.statementList = Objects.isNull(statementList) ? new ArrayList<>() : statementList;
         this.returnStatement = returnStatement;
-        this.aliasesMap = new HashMap<>();
+        this.functionContextRegistry = new FunctionContextRegistry(argumentList);
     }
 
     @Override
-    public String llvm() {
+    public List<String> llvm(FunctionContextRegistry functionContextRegistry) {
+        throw new IllegalStateException("Illegal method");
+    }
+
+    public String llvm(ProgramRegistry programRegistry) {
+        functionContextRegistry.setProgramRegistry(programRegistry);
+
         StringBuilder llvm = new StringBuilder();
         llvm.append("define ");
         llvm.append(getTypedIdentifier().getType().getSimpleType().getLlvm());
@@ -39,7 +52,8 @@ public class FunctionDefinition extends Definition {
                     ).collect(Collectors.joining(", "))
             );
         }
-        llvm.append(") {\nentry: \n");
+        llvm.append(") {\n");
+//        llvm.append("entry: \n");
         llvm.append(
                 generateFunctionBody().stream().map(
                         s -> "\t" + s + "\n"
@@ -54,6 +68,8 @@ public class FunctionDefinition extends Definition {
         List<String> lines = new ArrayList<>();
 
         lines.addAll(generateInitArgLines());
+        lines.addAll(generateStatements());
+        lines.addAll(generateReturnStatement());
 
         return lines;
     }
@@ -62,31 +78,42 @@ public class FunctionDefinition extends Definition {
         List<String> lines = new ArrayList<>();
 
         for (TypedIdentifier typedIdentifier : argumentList) {
-            typedIdentifier.setAlias(getNextTemporaryVariableName());
-            aliasesMap.put(typedIdentifier, typedIdentifier.getAlias());
+            functionContextRegistry.makeAlias(typedIdentifier);
         }
 
         for (TypedIdentifier var : argumentList) {
             lines.add(
-                    "%" + getAlias(var) + " = alloca " + var.getType().getSimpleType().getLlvm() + ", align 4"
+                    "%" + functionContextRegistry.getAlias(var) + " = alloca " + var.getType().getSimpleType().getLlvm() + ", align 4"
             );
         }
 
         for (TypedIdentifier var : argumentList) {
             lines.add(
-                    "store " + var.getType().getSimpleType().getLlvm() + " %" + var.getName() + ", " + var.getType().getSimpleType().getLlvm() + "* %" + getAlias(var) + ", align 4"
+                    "store " + var.getType().getSimpleType().getLlvm() + " %" + var.getName() + ", " + var.getType().getSimpleType().getLlvm() + "* %" + functionContextRegistry.getAlias(var) + ", align 4"
             );
         }
 
         return lines;
     }
 
-    private String getAlias(TypedIdentifier typedIdentifier) {
-        return aliasesMap.getOrDefault(typedIdentifier, typedIdentifier.getName());
+    private List<String> generateReturnStatement() {
+        List<String> lines = new ArrayList<>();
+
+        lines.addAll(returnStatement.llvm(functionContextRegistry, getTypedIdentifier().getType(), this, null));
+
+        lines.add("ret " + getTypedIdentifier().getType().getSimpleType().getLlvm() + " " + returnStatement.getAlias());
+
+        return lines;
     }
 
-    private String getNextTemporaryVariableName() {
-        return "" + temporaryVariableCounter++;
+    private List<String> generateStatements() {
+        List<String> lines = new ArrayList<>();
+
+        for (Statement statement : statementList) {
+            lines.addAll(statement.llvm(functionContextRegistry));
+        }
+
+        return lines;
     }
 
 }

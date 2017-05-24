@@ -1,5 +1,7 @@
 package xyz.morecraft.dev.lang.morelang;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -29,9 +31,13 @@ public class Main {
 
         System.out.println();
 
-        ObjectMapper mapper = new ObjectMapper();
-
-        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(program));
+        System.out.println(
+                new ObjectMapper()
+                        .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
+                        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+                        .writerWithDefaultPrettyPrinter()
+                        .writeValueAsString(program)
+        );
 
         System.out.println();
 

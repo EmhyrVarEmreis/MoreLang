@@ -1,8 +1,10 @@
-package xyz.morecraft.dev.lang.morelang.object;
+package xyz.morecraft.dev.lang.morelang.object.statement.definition;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import xyz.morecraft.dev.lang.morelang.object.TypedIdentifier;
+import xyz.morecraft.dev.lang.morelang.object.statement.Statement;
 
 @Data
 @AllArgsConstructor

@@ -1,7 +1,7 @@
 package xyz.morecraft.dev.lang.morelang.visitor;
 
 import xyz.morecraft.dev.lang.morelang.MoreLangGrammarParser;
-import xyz.morecraft.dev.lang.morelang.object.AssignmentStatement;
+import xyz.morecraft.dev.lang.morelang.object.statement.AssignmentStatement;
 import xyz.morecraft.dev.lang.morelang.visitor.proto.MoreLangGrammarBaseVisitorCustom;
 
 public class AssignmentStatementVisitor extends MoreLangGrammarBaseVisitorCustom<AssignmentStatement> {

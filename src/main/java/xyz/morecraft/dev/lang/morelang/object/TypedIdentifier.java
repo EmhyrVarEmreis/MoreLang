@@ -45,9 +45,7 @@ public class TypedIdentifier {
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
+        return name.hashCode();
     }
 
 }

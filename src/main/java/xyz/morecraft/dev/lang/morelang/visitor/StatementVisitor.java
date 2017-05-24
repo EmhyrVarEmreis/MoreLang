@@ -3,7 +3,7 @@ package xyz.morecraft.dev.lang.morelang.visitor;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 import xyz.morecraft.dev.lang.morelang.MoreLangGrammarParser;
-import xyz.morecraft.dev.lang.morelang.object.Statement;
+import xyz.morecraft.dev.lang.morelang.object.statement.Statement;
 import xyz.morecraft.dev.lang.morelang.visitor.proto.MoreLangGrammarBaseVisitorCustom;
 
 import java.util.ArrayList;

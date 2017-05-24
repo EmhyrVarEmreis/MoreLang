@@ -3,6 +3,7 @@ package xyz.morecraft.dev.lang.morelang.object;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
 
 import java.util.Objects;
 

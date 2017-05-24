@@ -1,10 +1,5 @@
 grammar MoreLangGrammar;
 
-@header {
-    import xyz.morecraft.dev.lang.morelang.object.Program;
-    import xyz.morecraft.dev.lang.morelang.object.Statement;
-}
-
 program:
     programHeader? programBody;
 
@@ -68,7 +63,7 @@ functionDefinitionHeaderArguments:
     ((typedIdentifier) (COMMA (typedIdentifier))*)?;
 
 functionInvocationArguments :
-    ((value | variable) (COMMA (value | variable) )*)?;
+    (expression (COMMA expression )*)?;
 
 typedIdentifier:
     type identifier;
