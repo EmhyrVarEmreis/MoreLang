@@ -27,9 +27,16 @@ public class AssignmentStatement extends Statement {
 
         Type type = functionContextRegistry.getType(variable.getName());
 
-        lines.addAll(expression.llvm(functionContextRegistry, type, this, null));
+        variable.setAlias(functionContextRegistry.getAlias(variable.getName()));
 
-        lines.add("store " + type.getSimpleType().getLlvm() + " " + expression.getAlias() + ", " + type.getSimpleType().getLlvm() + "* %" + variable.getName() + ", align 4");
+        Type requiredType = Type.of(type);
+        requiredType.setPointer(false);
+
+        System.out.println("assign " + functionContextRegistry.getParent().getTypedIdentifier().getName() + " " + variable + " \t" + type);
+
+        lines.addAll(expression.llvm(functionContextRegistry, requiredType, this, null));
+
+        lines.add("store " + type.getSimpleType().getLlvm() + " " + expression.getAlias() + ", " + type.getSimpleType().getLlvm() + "* %" + variable.name() + ", align 4");
 
         return lines;
     }

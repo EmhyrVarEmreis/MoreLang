@@ -27,17 +27,17 @@ public class Main {
         }
 
         Program program = new ProgramVisitor().visit(parser.program());
-        System.out.println(program.toString());
+//        System.out.println(program.toString());
 
-        System.out.println();
+//        System.out.println();
 
-        System.out.println(
-                new ObjectMapper()
-                        .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
-                        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-                        .writerWithDefaultPrettyPrinter()
-                        .writeValueAsString(program)
-        );
+//        System.out.println(
+//                new ObjectMapper()
+//                        .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
+//                        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+//                        .writerWithDefaultPrettyPrinter()
+//                        .writeValueAsString(program)
+//        );
 
         System.out.println();
 

@@ -11,6 +11,10 @@ public class Type {
     private boolean array;
     private boolean pointer;
 
+    public static Type of(Type t) {
+        return new Type(t.simpleType, t.array, t.pointer);
+    }
+
     public static Type of(String s) {
         if (s.contains("[]")) {
             return new Type(

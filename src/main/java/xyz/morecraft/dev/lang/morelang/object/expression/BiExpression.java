@@ -24,6 +24,8 @@ public class BiExpression extends Expression {
     public List<String> llvm(FunctionContextRegistry functionContextRegistry, Type requiredType, Statement statementContext, Expression expressionContext) {
         List<String> lines = new ArrayList<>();
 
+        System.out.println("biexp");
+
         lines.addAll(left.llvm(functionContextRegistry, requiredType, statementContext, this));
         lines.addAll(right.llvm(functionContextRegistry, requiredType, statementContext, this));
 

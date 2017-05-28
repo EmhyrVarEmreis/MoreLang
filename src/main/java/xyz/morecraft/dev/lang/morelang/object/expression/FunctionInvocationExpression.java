@@ -26,8 +26,6 @@ public class FunctionInvocationExpression extends Expression {
 
         FunctionDefinition functionDefinition = functionContextRegistry.getProgramRegistry().getFunctionDefinition(invocation.getName());
 
-        setAlias("%" + functionContextRegistry.getNextTemporaryVariableName());
-
         StringBuilder args = new StringBuilder();
         for (int i = 0; i < invocation.getArgumentExpressionList().size(); i++) {
             Expression expression = invocation.getArgumentExpressionList().get(i);
@@ -35,6 +33,8 @@ public class FunctionInvocationExpression extends Expression {
             lines.addAll(expression.llvm(functionContextRegistry, requiredType, null, this));
             args.append(", ").append(typedIdentifier.getType().getSimpleType().getLlvm()).append(" ").append(expression.getAlias());
         }
+
+        setAlias("%" + functionContextRegistry.getNextTemporaryVariableName());
 
         lines.add(
                 getAlias() + " = call "

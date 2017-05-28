@@ -2,12 +2,11 @@ package xyz.morecraft.dev.lang.morelang.object.statement.definition;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.ProgramRegistry;
 import xyz.morecraft.dev.lang.morelang.object.TypedIdentifier;
-import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
 import xyz.morecraft.dev.lang.morelang.object.statement.Statement;
-import xyz.morecraft.dev.lang.morelang.object.statement.definition.Definition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,6 @@ public class FunctionDefinition extends Definition {
         this.argumentList = Objects.isNull(argumentList) ? new ArrayList<>() : argumentList;
         this.statementList = Objects.isNull(statementList) ? new ArrayList<>() : statementList;
         this.returnStatement = returnStatement;
-        this.functionContextRegistry = new FunctionContextRegistry(argumentList);
     }
 
     @Override
@@ -37,7 +35,9 @@ public class FunctionDefinition extends Definition {
     }
 
     public String llvm(ProgramRegistry programRegistry) {
-        functionContextRegistry.setProgramRegistry(programRegistry);
+        System.out.println("\n\nfun: " + getTypedIdentifier().getName());
+
+        functionContextRegistry = new FunctionContextRegistry(this, programRegistry, this.argumentList);
 
         StringBuilder llvm = new StringBuilder();
         llvm.append("define ");

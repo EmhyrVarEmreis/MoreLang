@@ -28,5 +28,5 @@ int main() {
     int a;
     a = 4;
     a = function(a, 1);
-    return funnn();
+    return a;
 }

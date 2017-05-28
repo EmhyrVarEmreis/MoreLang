@@ -27,8 +27,12 @@ public class VariableDefinition extends Definition {
     public List<String> llvm(FunctionContextRegistry functionContextRegistry) {
         List<String> lines = new ArrayList<>();
 
+        getTypedIdentifier().setAlias(functionContextRegistry.getAlias(getTypedIdentifier()));
+
         getTypedIdentifier().getType().setPointer(true);
         functionContextRegistry.registerType(getTypedIdentifier());
+
+        System.out.println("vardef " + functionContextRegistry.getParent().getTypedIdentifier().getName() + " " + getTypedIdentifier().getName() + " \t" + getTypedIdentifier().getType());
 
         lines.add("%" + getTypedIdentifier().getName() + " = alloca " + getTypedIdentifier().getType().getSimpleType().getLlvm() + ", align 4");
 

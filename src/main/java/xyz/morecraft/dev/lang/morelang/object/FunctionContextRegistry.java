@@ -1,7 +1,9 @@
 package xyz.morecraft.dev.lang.morelang.object;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import xyz.morecraft.dev.lang.morelang.object.statement.definition.FunctionDefinition;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,14 +12,18 @@ import java.util.Objects;
 
 public class FunctionContextRegistry {
 
+    @Getter
+    @JsonIgnore
+    private FunctionDefinition parent;
     private Map<String, Type> variableTypesMap;
     private Map<String, TypedIdentifier> typedIdentifierNameMap;
     private int temporaryVariableCounter = 1;
     @Getter
-    @Setter
     private ProgramRegistry programRegistry;
 
-    public FunctionContextRegistry(List<TypedIdentifier> argumentList) {
+    public FunctionContextRegistry(FunctionDefinition parent, ProgramRegistry programRegistry, List<TypedIdentifier> argumentList) {
+        this.parent = parent;
+        this.programRegistry = programRegistry;
         this.variableTypesMap = new HashMap<>();
         this.typedIdentifierNameMap = new HashMap<>();
         for (TypedIdentifier typedIdentifier : argumentList) {
@@ -31,10 +37,11 @@ public class FunctionContextRegistry {
     }
 
     public Type registerType(TypedIdentifier typedIdentifier) {
-        return variableTypesMap.put(typedIdentifier.getName(), typedIdentifier.getType());
+        return registerType(typedIdentifier.getName(), typedIdentifier.getType());
     }
 
     public Type registerType(String name, Type type) {
+        System.out.println("- registering [" + (variableTypesMap.size() + 1) + "]" + name + " " + type);
         return variableTypesMap.put(name, type);
     }
 
