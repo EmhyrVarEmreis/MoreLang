@@ -41,7 +41,7 @@ public class ExpressionVisitor extends MoreLangGrammarBaseVisitorCustom<Expressi
         return new BiExpression(
                 ctx.expression(0).accept(this),
                 ctx.expression(1).accept(this),
-                Operator.valueOf(MoreLangGrammarLexer.ruleNames[TerminalNode.class.cast(ctx.operator().getChild(0)).getSymbol().getType() - 1].substring(3))
+                Operator.valueOf(MoreLangGrammarLexer.ruleNames[TerminalNode.class.cast(ctx.operator().getChild(0).getChild(0)).getSymbol().getType() - 1].substring(3))
         );
     }
 

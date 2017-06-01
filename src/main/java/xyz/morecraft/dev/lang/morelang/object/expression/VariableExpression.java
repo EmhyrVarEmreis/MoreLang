@@ -12,6 +12,7 @@ import xyz.morecraft.dev.lang.morelang.object.statement.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -33,7 +34,7 @@ public class VariableExpression extends Expression {
         }
 
         Type type = functionContextRegistry.getType(variable.getName());
-        if (!requiredType.equals(type)) {
+        if (Objects.nonNull(requiredType) && !requiredType.equals(type)) {
             String newAlias = "%" + functionContextRegistry.getNextTemporaryVariableName();
             lines.add(newAlias + " = load " + requiredType.getSimpleType().getLlvm() + ", " + type.getSimpleType().getLlvm() + "* %" + variable.name() + ", align 4");
             setAlias(newAlias);

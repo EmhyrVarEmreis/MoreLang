@@ -18,6 +18,7 @@ public class StatementVisitor extends MoreLangGrammarBaseVisitorCustom<Statement
         visitorList.add(new VariableDefinitionStatementVisitor());
         visitorList.add(new AssignmentStatementVisitor());
         visitorList.add(new FunctionInvocationStatementVisitor());
+        visitorList.add(new IfStatementVisitor());
         for (ParserRuleContext parserRuleContext : ctx.getRuleContexts(ParserRuleContext.class)) {
             for (ParseTreeVisitor<? extends Statement> visitor : visitorList) {
                 Statement statement = parserRuleContext.accept(visitor);

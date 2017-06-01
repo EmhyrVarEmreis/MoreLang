@@ -56,7 +56,7 @@ public class FunctionDefinition extends Definition {
 //        llvm.append("entry: \n");
         llvm.append(
                 generateFunctionBody().stream().map(
-                        s -> "\t" + s + "\n"
+                        s -> (s.endsWith(":") ? s : ("\t" + s)) + "\n"
                 ).collect(Collectors.joining())
         );
         llvm.append("}\n\n");

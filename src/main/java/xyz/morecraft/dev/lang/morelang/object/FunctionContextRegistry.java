@@ -2,7 +2,6 @@ package xyz.morecraft.dev.lang.morelang.object;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.Setter;
 import xyz.morecraft.dev.lang.morelang.object.statement.definition.FunctionDefinition;
 
 import java.util.HashMap;
@@ -18,6 +17,7 @@ public class FunctionContextRegistry {
     private Map<String, Type> variableTypesMap;
     private Map<String, TypedIdentifier> typedIdentifierNameMap;
     private int temporaryVariableCounter = 1;
+    private int temporaryLabelCounter = 1;
     @Getter
     private ProgramRegistry programRegistry;
 
@@ -34,6 +34,10 @@ public class FunctionContextRegistry {
 
     public String getNextTemporaryVariableName() {
         return "" + temporaryVariableCounter++;
+    }
+
+    public String getNextTemporaryLabelName() {
+        return "lbl" + temporaryLabelCounter++;
     }
 
     public Type registerType(TypedIdentifier typedIdentifier) {

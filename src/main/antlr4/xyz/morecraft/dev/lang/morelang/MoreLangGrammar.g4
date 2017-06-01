@@ -77,8 +77,17 @@ identifier:
 type:
     ((INT | FLOAT | STRING) TAB_SUFFIX?) | VOID;
 
-operator :
-    OP_PLUS | OP_MINUS | OP_DIVIDE | OP_MULTIPLY | OP_COMPARE | OP_COMPARE_NEG | OP_AND | OP_OR;
+operator:
+    arithmeticOperator | logicalOperator | compareOperator;
+
+arithmeticOperator :
+    OP_PLUS | OP_MINUS | OP_DIVIDE | OP_MULTIPLY;
+
+logicalOperator :
+    OP_LOGIC_AND | OP_LOGIC_OR;
+
+compareOperator :
+    OP_COMPARE_EQ | OP_COMPARE_NEQ | OP_COMPARE_GT | OP_COMPARE_LT;
 
 
 // control sequences
@@ -101,10 +110,12 @@ OP_PLUS                 :   '+';
 OP_MINUS                :   '-';
 OP_DIVIDE               :   '/';
 OP_MULTIPLY             :   '*';
-OP_COMPARE              :   '==';
-OP_COMPARE_NEG          :   '!=';
-OP_AND                  :   '&&';
-OP_OR                   :   '||';
+OP_COMPARE_EQ           :   '==';
+OP_COMPARE_NEQ          :   '!=';
+OP_COMPARE_GT           :   '>';
+OP_COMPARE_LT           :   '<';
+OP_LOGIC_AND            :   '&&';
+OP_LOGIC_OR             :   '||';
 
 // values
 VAL_STRING              :   ['].*?['];

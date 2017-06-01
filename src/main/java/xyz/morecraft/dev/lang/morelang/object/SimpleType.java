@@ -4,7 +4,7 @@ import lombok.Getter;
 
 public enum SimpleType {
 
-    INT("i32"), FLOAT("float"), STRING("string");
+    INT("i32"), FLOAT("float"), STRING("string"), BOOLEAN("boolean");
 
     SimpleType(String llvm) {
         this.llvm = llvm;
