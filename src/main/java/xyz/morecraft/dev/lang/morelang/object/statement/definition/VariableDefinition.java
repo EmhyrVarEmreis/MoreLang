@@ -25,7 +25,7 @@ public class VariableDefinition extends Definition {
 
     @Override
     public List<String> llvm(FunctionContextRegistry functionContextRegistry) {
-        List<String> lines = new ArrayList<>();
+        final List<String> lines = new ArrayList<>();
 
         getTypedIdentifier().setAlias(functionContextRegistry.getAlias(getTypedIdentifier()));
 

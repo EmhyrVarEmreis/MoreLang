@@ -30,6 +30,10 @@ public class FunctionContextRegistry {
             typedIdentifier.getType().setPointer(true);
             registerType(typedIdentifier);
         }
+        for (TypedIdentifier typedIdentifier : programRegistry.getGlobalVariableList()) {
+            register(typedIdentifier, false);
+            registerType(typedIdentifier);
+        }
     }
 
     public String getNextTemporaryVariableName() {

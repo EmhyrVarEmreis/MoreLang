@@ -13,6 +13,7 @@ public class ProgramVisitor extends MoreLangGrammarBaseVisitorCustom<Program> {
         MoreLangGrammarParser.ProgramHeaderContext programHeader = ctx.programHeader();
         return new Program(
                 Objects.isNull(programHeader) ? null : programHeader.accept(new ProgramHeaderVisitor()),
+                convert(ctx.programBody().globalVariableDefinitionStatement(), new GlobalVariableDefinitionStatementVisitor()),
                 convert(ctx.programBody().functionDefinition(), new FunctionDefinitionVisitor())
         );
     }

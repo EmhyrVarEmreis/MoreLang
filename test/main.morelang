@@ -1,3 +1,5 @@
+global int limit = 123;
+
 int funn(int a) {
     int b = 4;
     return a*b;
@@ -28,7 +30,7 @@ int main() {
     int a;
     a = 4;
     a = function(a, 1);
-    while (a < 100) {
+    while (a < limit) {
         a = a + 1;
     }
     return a;

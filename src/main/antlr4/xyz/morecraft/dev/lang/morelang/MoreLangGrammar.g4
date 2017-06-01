@@ -4,7 +4,7 @@ program:
     programHeader? programBody;
 
 programBody :
-    (SEMICOLON | functionDefinition)+;
+    (SEMICOLON | globalVariableDefinitionStatement)* (SEMICOLON | functionDefinition)*;
 
 body :
     (SEMICOLON | statement)+;
@@ -32,6 +32,9 @@ whileLoopStatement :
 
 variableDefinitionStatement :
     typedIdentifier TAB_SUFFIX? (EQUAL expression)? SEMICOLON;
+
+globalVariableDefinitionStatement :
+    CTRL_GLOBAL typedIdentifier TAB_SUFFIX? EQUAL value SEMICOLON;
 
 assignmentStatement :
     variable (BRACKET_SQUARE_OP VAL_INT BRACKET_SQUARE_CLOSE)? EQUAL expression;
@@ -97,6 +100,7 @@ CTRL_IF                 :   'if';
 CTRL_ELSE               :   'else';
 CTRL_WHILE              :   'while';
 CTRL_DOT                :   '.';
+CTRL_GLOBAL             :   'global';
 
 // types
 INT                     :   'int';
