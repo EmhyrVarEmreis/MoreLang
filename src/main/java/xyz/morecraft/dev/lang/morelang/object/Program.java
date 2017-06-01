@@ -8,6 +8,7 @@ import xyz.morecraft.dev.lang.morelang.object.statement.definition.GlobalVariabl
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -30,10 +31,13 @@ public class Program {
         StringBuilder llvm = new StringBuilder();
 
         for (GlobalVariableDefinition globalVariableDefinition : globalVariableDefinitionList) {
-            llvm.append(globalVariableDefinition.llvm(null));
+            llvm.append("\n");
+            llvm.append(globalVariableDefinition.llvm(null).stream().collect(Collectors.joining("\n")));
+            llvm.append("\n");
         }
 
         for (FunctionDefinition functionDefinition : functionDefinitionList) {
+            llvm.append("\n");
             llvm.append(functionDefinition.llvm(programRegistry));
         }
 
