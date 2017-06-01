@@ -31,16 +31,7 @@ public class BiExpression extends Expression {
 
         setAlias("%" + functionContextRegistry.getNextTemporaryVariableName());
 
-        switch (operator) {
-            case MULTIPLY:
-                lines.add(getAlias() + " = mul nsw " + requiredType.getSimpleType().getLlvm() + " " + left.getAlias() + ", " + right.getAlias());
-                break;
-            case PLUS:
-                lines.add(getAlias() + " = add nsw " + requiredType.getSimpleType().getLlvm() + " " + left.getAlias() + ", " + right.getAlias());
-                break;
-            default:
-                throw new IllegalArgumentException("Illegal operator");
-        }
+        lines.addAll(operator.llvm(getAlias(), requiredType, left.getAlias(), right.getAlias()));
 
         return lines;
     }

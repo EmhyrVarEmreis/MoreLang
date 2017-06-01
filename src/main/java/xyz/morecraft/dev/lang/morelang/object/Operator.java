@@ -3,6 +3,9 @@ package xyz.morecraft.dev.lang.morelang.object;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Collection;
+import java.util.Collections;
+
 @AllArgsConstructor
 public enum Operator {
 
@@ -23,6 +26,23 @@ public enum Operator {
 
     @Getter
     private String llvm;
+
+    public Collection<? extends String> llvm(String alias, Type requiredType, String leftAlias, String rightAlias) {
+        switch (this) {
+            case PLUS:
+            case MINUS:
+            case MULTIPLY:
+            case DIVISION:
+                return Collections.singletonList(alias + " = " + llvm + " nsw " + requiredType.getSimpleType().getLlvm() + " " + leftAlias + ", " + rightAlias);
+            case COMPARE_EQ:
+            case COMPARE_NEQ:
+            case COMPARE_GT:
+            case COMPARE_LT:
+                return Collections.singletonList(alias + " = icmp " + llvm + " " + requiredType.getSimpleType().getLlvm() + " " + leftAlias + ", " + rightAlias);
+            default:
+                throw new IllegalArgumentException("Unsupported operator");
+        }
+    }
 
     public static enum OperatorType {
         ARITHMETICAL, LOGICAL, COMPARE

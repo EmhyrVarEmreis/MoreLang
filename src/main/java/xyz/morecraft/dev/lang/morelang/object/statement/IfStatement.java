@@ -38,7 +38,7 @@ public class IfStatement extends Statement {
         final String elseLabelName = functionContextRegistry.getNextTemporaryLabelName();
         final String endLabelName = Objects.nonNull(elseBlock) ? functionContextRegistry.getNextTemporaryLabelName() : elseLabelName;
 
-        lines.add("br i1 %" + conditionExpression.getAlias() + ", label %" + thenLabelName + ", label %" + elseLabelName);
+        lines.add("br i1 " + conditionExpression.getAlias() + ", label %" + thenLabelName + ", label %" + elseLabelName);
 
         lines.add(thenLabelName + ":");
         for (Statement statement : thenBlock) {
