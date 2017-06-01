@@ -119,7 +119,7 @@ OP_LOGIC_OR             :   '||';
 
 // values
 VAL_STRING              :   ['].*?['];
-VAL_INT                 :   [0-9];
+VAL_INT                 :   [0-9]+;
 VAL_FLOAT               :   [0-9]* '.' [0-9]+;
 
 //special
