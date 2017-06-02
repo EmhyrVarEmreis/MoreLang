@@ -3,7 +3,7 @@ package xyz.morecraft.dev.lang.morelang.object.expression;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
+import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.Type;
 import xyz.morecraft.dev.lang.morelang.object.statement.Statement;
 

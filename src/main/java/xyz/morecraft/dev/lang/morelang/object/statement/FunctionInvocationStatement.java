@@ -3,8 +3,7 @@ package xyz.morecraft.dev.lang.morelang.object.statement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import xyz.morecraft.dev.lang.morelang.object.Variable;
-import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
+import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
 
 import java.util.ArrayList;

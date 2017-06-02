@@ -3,7 +3,7 @@ package xyz.morecraft.dev.lang.morelang.object.expression;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
+import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.Type;
 import xyz.morecraft.dev.lang.morelang.object.TypedIdentifier;
 import xyz.morecraft.dev.lang.morelang.object.statement.FunctionInvocationStatement;
@@ -34,15 +34,15 @@ public class FunctionInvocationExpression extends Expression {
             args.append(", ").append(typedIdentifier.getType().getSimpleType().getLlvm()).append(" ").append(expression.getAlias());
         }
 
-        setAlias("%" + functionContextRegistry.getNextTemporaryVariableName());
+        String tmpAlias = functionContextRegistry.getNextTemporaryVariableName();
 
         lines.add(
-                getAlias() + " = call "
+                tmpAlias + " = call "
                         + functionDefinition.getTypedIdentifier().getType().getSimpleType().getLlvm()
                         + " @" + invocation.getName() + "( " + args.substring(args.length() == 0 ? 0 : 2) + " )"
         );
 
-        functionContextRegistry.registerType(getRawAlias(), functionDefinition.getTypedIdentifier().getType());
+        functionContextRegistry.register(this, functionDefinition.getTypedIdentifier().getType(), false);
 
         return lines;
     }

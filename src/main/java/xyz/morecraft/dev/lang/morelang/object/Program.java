@@ -3,6 +3,7 @@ package xyz.morecraft.dev.lang.morelang.object;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import xyz.morecraft.dev.lang.morelang.object.registry.ProgramRegistry;
 import xyz.morecraft.dev.lang.morelang.object.statement.definition.FunctionDefinition;
 import xyz.morecraft.dev.lang.morelang.object.statement.definition.GlobalVariableDefinition;
 
@@ -31,7 +32,6 @@ public class Program {
         StringBuilder llvm = new StringBuilder();
 
         for (GlobalVariableDefinition globalVariableDefinition : globalVariableDefinitionList) {
-            llvm.append("\n");
             llvm.append(globalVariableDefinition.llvm(null).stream().collect(Collectors.joining("\n")));
             llvm.append("\n");
         }

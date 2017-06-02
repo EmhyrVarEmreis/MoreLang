@@ -1,7 +1,10 @@
-package xyz.morecraft.dev.lang.morelang.object;
+package xyz.morecraft.dev.lang.morelang.object.registry;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import xyz.morecraft.dev.lang.morelang.object.Type;
+import xyz.morecraft.dev.lang.morelang.object.TypedIdentifier;
+import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
 import xyz.morecraft.dev.lang.morelang.object.statement.definition.FunctionDefinition;
 
 import java.util.HashMap;
@@ -14,8 +17,7 @@ public class FunctionContextRegistry {
     @Getter
     @JsonIgnore
     private FunctionDefinition parent;
-    private Map<String, Type> variableTypesMap;
-    private Map<String, TypedIdentifier> typedIdentifierNameMap;
+    private Map<String, RegisteredVariable> registeredVariableMap;
     private int temporaryVariableCounter = 1;
     private int temporaryLabelCounter = 1;
     @Getter
@@ -24,15 +26,13 @@ public class FunctionContextRegistry {
     public FunctionContextRegistry(FunctionDefinition parent, ProgramRegistry programRegistry, List<TypedIdentifier> argumentList) {
         this.parent = parent;
         this.programRegistry = programRegistry;
-        this.variableTypesMap = new HashMap<>();
-        this.typedIdentifierNameMap = new HashMap<>();
+        this.registeredVariableMap = new HashMap<>();
         for (TypedIdentifier typedIdentifier : argumentList) {
             typedIdentifier.getType().setPointer(true);
-            registerType(typedIdentifier);
+            register(typedIdentifier, false, false);
         }
         for (TypedIdentifier typedIdentifier : programRegistry.getGlobalVariableList()) {
-            register(typedIdentifier, false);
-            registerType(typedIdentifier);
+            register(typedIdentifier, false, true);
         }
     }
 
@@ -44,28 +44,42 @@ public class FunctionContextRegistry {
         return "lbl" + temporaryLabelCounter++;
     }
 
-    public Type registerType(TypedIdentifier typedIdentifier) {
-        return registerType(typedIdentifier.getName(), typedIdentifier.getType());
+    public RegisteredVariable register(Expression expression, Type type, boolean makeAlias) {
+        if (makeAlias) {
+            expression.setAlias(getNextTemporaryVariableName());
+        }
+        RegisteredVariable registeredVariable = new RegisteredVariable(
+                expression.getAlias(),
+                expression.getAlias(),
+                false,
+                type
+        );
+        registeredVariableMap.put(registeredVariable.getName(), registeredVariable);
+        return registeredVariable;
     }
 
-    public Type registerType(String name, Type type) {
-        System.out.println("- registering [" + (variableTypesMap.size() + 1) + "]" + name + " " + type);
-        return variableTypesMap.put(name, type);
+    public RegisteredVariable register(TypedIdentifier typedIdentifier, boolean makeAlias) {
+        return register(typedIdentifier, makeAlias, false);
     }
 
-    public TypedIdentifier register(TypedIdentifier typedIdentifier, boolean makeAlias) {
-        variableTypesMap.put(typedIdentifier.getName(), typedIdentifier.getType());
+    public RegisteredVariable register(TypedIdentifier typedIdentifier, boolean makeAlias, boolean isGlobal) {
         if (makeAlias) {
             typedIdentifier = makeAlias(typedIdentifier);
         }
-        return typedIdentifier;
+        RegisteredVariable registeredVariable = new RegisteredVariable(
+                typedIdentifier.getName(),
+                typedIdentifier.getAlias(),
+                isGlobal,
+                typedIdentifier.getType()
+        );
+        registeredVariableMap.put(registeredVariable.getName(), registeredVariable);
+        return registeredVariable;
     }
 
     public TypedIdentifier makeAlias(TypedIdentifier typedIdentifier) {
         if (Objects.isNull(typedIdentifier.getAlias())) {
             typedIdentifier.setAlias(getNextTemporaryVariableName());
         }
-        typedIdentifierNameMap.put(typedIdentifier.getName(), typedIdentifier);
         return typedIdentifier;
     }
 
@@ -74,16 +88,7 @@ public class FunctionContextRegistry {
     }
 
     public Type getType(String name) {
-        Type type = variableTypesMap.get(name);
-        if (Objects.isNull(type)) {
-            type = determineType(typedIdentifierNameMap.get(name));
-            variableTypesMap.put(name, type);
-        }
-        return type;
-    }
-
-    private Type determineType(TypedIdentifier typedIdentifier) {
-        return null;
+        return registeredVariableMap.getOrDefault(name, new RegisteredVariable()).getType();
     }
 
     public String getAlias(TypedIdentifier typedIdentifier) {
@@ -91,7 +96,7 @@ public class FunctionContextRegistry {
     }
 
     public String getAlias(String id) {
-        return typedIdentifierNameMap.getOrDefault(id, new TypedIdentifier(id, id, null)).getAlias();
+        return registeredVariableMap.getOrDefault(id, new RegisteredVariable(id, id, false, null)).getAlias();
     }
 
 }

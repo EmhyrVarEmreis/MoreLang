@@ -3,9 +3,9 @@ package xyz.morecraft.dev.lang.morelang.object.expression;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.Operator;
 import xyz.morecraft.dev.lang.morelang.object.Type;
+import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.statement.Statement;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class BiExpression extends Expression {
         lines.addAll(left.llvm(functionContextRegistry, requiredType, statementContext, this));
         lines.addAll(right.llvm(functionContextRegistry, requiredType, statementContext, this));
 
-        setAlias("%" + functionContextRegistry.getNextTemporaryVariableName());
+        functionContextRegistry.register(this, requiredType, true);
 
         lines.addAll(operator.llvm(getAlias(), requiredType, left.getAlias(), right.getAlias()));
 

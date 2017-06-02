@@ -4,9 +4,9 @@ package xyz.morecraft.dev.lang.morelang.object.expression;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.Type;
 import xyz.morecraft.dev.lang.morelang.object.Variable;
+import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.statement.AssignmentStatement;
 import xyz.morecraft.dev.lang.morelang.object.statement.Statement;
 
@@ -35,14 +35,14 @@ public class VariableExpression extends Expression {
 
         Type type = functionContextRegistry.getType(variable.getName());
         if (Objects.nonNull(requiredType) && !requiredType.equals(type)) {
-            String newAlias = "%" + functionContextRegistry.getNextTemporaryVariableName();
-            lines.add(newAlias + " = load " + requiredType.getSimpleType().getLlvm() + ", " + type.getSimpleType().getLlvm() + "* %" + variable.name() + ", align 4");
+            String newAlias = functionContextRegistry.getNextTemporaryVariableName();
+            lines.add("%" + newAlias + " = load " + requiredType.getSimpleType().getLlvm() + ", " + type.getSimpleType().getLlvm() + "* -" + variable.name() + ", align 4");
             setAlias(newAlias);
         } else {
-            setAlias("%" + variable.getName());
+            setAlias(variable.getName());
         }
 
-        functionContextRegistry.registerType(getRawAlias(), requiredType);
+        functionContextRegistry.register(this, requiredType, false);
 
         return lines;
     }

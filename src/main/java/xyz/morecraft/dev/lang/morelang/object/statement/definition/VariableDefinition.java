@@ -3,7 +3,7 @@ package xyz.morecraft.dev.lang.morelang.object.statement.definition;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
+import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.TypedIdentifier;
 import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
 
@@ -30,7 +30,7 @@ public class VariableDefinition extends Definition {
         getTypedIdentifier().setAlias(functionContextRegistry.getAlias(getTypedIdentifier()));
 
         getTypedIdentifier().getType().setPointer(true);
-        functionContextRegistry.registerType(getTypedIdentifier());
+        functionContextRegistry.register(getTypedIdentifier(), false);
 
         System.out.println("vardef " + functionContextRegistry.getParent().getTypedIdentifier().getName() + " " + getTypedIdentifier().getName() + " \t" + getTypedIdentifier().getType());
 

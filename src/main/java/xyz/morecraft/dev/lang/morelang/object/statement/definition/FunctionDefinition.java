@@ -2,8 +2,8 @@ package xyz.morecraft.dev.lang.morelang.object.statement.definition;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
-import xyz.morecraft.dev.lang.morelang.object.ProgramRegistry;
+import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
+import xyz.morecraft.dev.lang.morelang.object.registry.ProgramRegistry;
 import xyz.morecraft.dev.lang.morelang.object.TypedIdentifier;
 import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
 import xyz.morecraft.dev.lang.morelang.object.statement.Statement;
@@ -83,13 +83,13 @@ public class FunctionDefinition extends Definition {
 
         for (TypedIdentifier var : argumentList) {
             lines.add(
-                    "%" + functionContextRegistry.getAlias(var) + " = alloca " + var.getType().getSimpleType().getLlvm() + ", align 4"
+                    functionContextRegistry.getAlias(var) + " = alloca " + var.getType().getSimpleType().getLlvm() + ", align 4"
             );
         }
 
         for (TypedIdentifier var : argumentList) {
             lines.add(
-                    "store " + var.getType().getSimpleType().getLlvm() + " %" + var.getName() + ", " + var.getType().getSimpleType().getLlvm() + "* %" + functionContextRegistry.getAlias(var) + ", align 4"
+                    "store " + var.getType().getSimpleType().getLlvm() + " %" + var.getName() + ", " + var.getType().getSimpleType().getLlvm() + "* " + functionContextRegistry.getAlias(var) + ", align 4"
             );
         }
 

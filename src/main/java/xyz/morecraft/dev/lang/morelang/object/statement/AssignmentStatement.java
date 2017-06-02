@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
+import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.Type;
 import xyz.morecraft.dev.lang.morelang.object.Variable;
 import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
@@ -36,7 +36,7 @@ public class AssignmentStatement extends Statement {
 
         lines.addAll(expression.llvm(functionContextRegistry, requiredType, this, null));
 
-        lines.add("store " + type.getSimpleType().getLlvm() + " " + expression.getAlias() + ", " + type.getSimpleType().getLlvm() + "* %" + variable.name() + ", align 4");
+        lines.add("store " + type.getSimpleType().getLlvm() + " " + expression.getAlias() + ", " + type.getSimpleType().getLlvm() + "* " + variable.name() + ", align 4");
 
         return lines;
     }

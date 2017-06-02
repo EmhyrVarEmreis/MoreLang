@@ -1,5 +1,6 @@
-package xyz.morecraft.dev.lang.morelang.object;
+package xyz.morecraft.dev.lang.morelang.object.registry;
 
+import xyz.morecraft.dev.lang.morelang.object.TypedIdentifier;
 import xyz.morecraft.dev.lang.morelang.object.statement.definition.FunctionDefinition;
 import xyz.morecraft.dev.lang.morelang.object.statement.definition.GlobalVariableDefinition;
 

@@ -1,7 +1,7 @@
 package xyz.morecraft.dev.lang.morelang.object.expression;
 
 import lombok.Data;
-import xyz.morecraft.dev.lang.morelang.object.FunctionContextRegistry;
+import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.Type;
 import xyz.morecraft.dev.lang.morelang.object.statement.Statement;
 
