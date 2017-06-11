@@ -29,19 +29,13 @@ public class Program {
     }
 
     public String llvm() {
-        StringBuilder llvm = new StringBuilder();
-
-        for (GlobalVariableDefinition globalVariableDefinition : globalVariableDefinitionList) {
-            llvm.append(globalVariableDefinition.llvm(null).stream().collect(Collectors.joining("\n")));
-            llvm.append("\n");
-        }
-
-        for (FunctionDefinition functionDefinition : functionDefinitionList) {
-            llvm.append("\n");
-            llvm.append(functionDefinition.llvm(programRegistry));
-        }
-
-        return llvm.toString();
+        return globalVariableDefinitionList.stream()
+                .map(globalVariableDefinition -> globalVariableDefinition.llvm(null).stream().collect(Collectors.joining("\n")))
+                .collect(Collectors.joining("\n"))
+                + "\n\n\n" +
+                functionDefinitionList.stream()
+                        .map(functionDefinition -> functionDefinition.llvm(programRegistry))
+                        .collect(Collectors.joining("\n\n"));
     }
 
 }

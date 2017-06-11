@@ -3,9 +3,9 @@ package xyz.morecraft.dev.lang.morelang.object.statement.definition;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.TypedIdentifier;
 import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
+import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class VariableDefinition extends Definition {
 
         if (Objects.nonNull(content)) {
             lines.addAll(content.llvm(functionContextRegistry, getTypedIdentifier().getType(), this, null));
-            lines.add("store " + getTypedIdentifier().getType().getSimpleType().getLlvm() + " " + content.getAlias() + ", i32* %" + getTypedIdentifier().name() + ", align 4");
+            lines.add("store " + getTypedIdentifier().getType().getSimpleType().getLlvm() + " %" + content.getAlias() + ", " + getTypedIdentifier().getType().getSimpleType().getLlvm() + "* %" + getTypedIdentifier().name() + ", align 4");
         }
 
         return lines;

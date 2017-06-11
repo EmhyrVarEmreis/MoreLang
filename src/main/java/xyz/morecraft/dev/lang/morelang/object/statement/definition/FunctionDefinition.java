@@ -2,10 +2,10 @@ package xyz.morecraft.dev.lang.morelang.object.statement.definition;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
-import xyz.morecraft.dev.lang.morelang.object.registry.ProgramRegistry;
 import xyz.morecraft.dev.lang.morelang.object.TypedIdentifier;
 import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
+import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
+import xyz.morecraft.dev.lang.morelang.object.registry.ProgramRegistry;
 import xyz.morecraft.dev.lang.morelang.object.statement.Statement;
 
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class FunctionDefinition extends Definition {
                         s -> (s.endsWith(":") ? s : ("\t" + s)) + "\n"
                 ).collect(Collectors.joining())
         );
-        llvm.append("}\n\n");
+        llvm.append("}");
 
         return llvm.toString();
     }
@@ -78,18 +78,18 @@ public class FunctionDefinition extends Definition {
         List<String> lines = new ArrayList<>();
 
         for (TypedIdentifier typedIdentifier : argumentList) {
-            functionContextRegistry.makeAlias(typedIdentifier);
+            functionContextRegistry.register(typedIdentifier, true);
         }
 
         for (TypedIdentifier var : argumentList) {
             lines.add(
-                    functionContextRegistry.getAlias(var) + " = alloca " + var.getType().getSimpleType().getLlvm() + ", align 4"
+                    "%" + functionContextRegistry.getAlias(var) + " = alloca " + var.getType().getSimpleType().getLlvm() + ", align 4"
             );
         }
 
         for (TypedIdentifier var : argumentList) {
             lines.add(
-                    "store " + var.getType().getSimpleType().getLlvm() + " %" + var.getName() + ", " + var.getType().getSimpleType().getLlvm() + "* " + functionContextRegistry.getAlias(var) + ", align 4"
+                    "store " + var.getType().getSimpleType().getLlvm() + " %" + var.getName() + ", " + var.getType().getSimpleType().getLlvm() + "* %" + functionContextRegistry.getAlias(var) + ", align 4"
             );
         }
 

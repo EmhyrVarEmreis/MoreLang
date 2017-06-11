@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import xyz.morecraft.dev.lang.morelang.object.Type;
 import xyz.morecraft.dev.lang.morelang.object.TypedIdentifier;
+import xyz.morecraft.dev.lang.morelang.object.Variable;
 import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
 import xyz.morecraft.dev.lang.morelang.object.statement.definition.FunctionDefinition;
 
@@ -46,7 +47,7 @@ public class FunctionContextRegistry {
 
     public RegisteredVariable register(Expression expression, Type type, boolean makeAlias) {
         if (makeAlias) {
-            expression.setAlias(getNextTemporaryVariableName());
+            expression.setAlias("%" + getNextTemporaryVariableName());
         }
         RegisteredVariable registeredVariable = new RegisteredVariable(
                 expression.getAlias(),
@@ -99,4 +100,13 @@ public class FunctionContextRegistry {
         return registeredVariableMap.getOrDefault(id, new RegisteredVariable(id, id, false, null)).getAlias();
     }
 
+    public void updateVariable(Variable variable) {
+        final RegisteredVariable registeredVariable = registeredVariableMap.getOrDefault(
+                variable.getName(),
+                new RegisteredVariable(variable.getName(), variable.getName(), false, null)
+        );
+        variable.setAlias(registeredVariable.getAlias());
+        variable.setType(registeredVariable.getType());
+        variable.setGlobal(registeredVariable.isGlobal());
+    }
 }

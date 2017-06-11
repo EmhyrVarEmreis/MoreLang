@@ -25,7 +25,7 @@ public class VariableExpression extends Expression {
     public List<String> llvm(FunctionContextRegistry functionContextRegistry, Type requiredType, Statement statementContext, Expression expressionContext) {
         List<String> lines = new ArrayList<>();
 
-        variable.setAlias(functionContextRegistry.getAlias(variable.getName()));
+        functionContextRegistry.updateVariable(variable);
 
         if (statementContext instanceof AssignmentStatement) {
             System.out.println("\tvar: \t\t\t" + variable.getName());
@@ -35,11 +35,11 @@ public class VariableExpression extends Expression {
 
         Type type = functionContextRegistry.getType(variable.getName());
         if (Objects.nonNull(requiredType) && !requiredType.equals(type)) {
-            String newAlias = functionContextRegistry.getNextTemporaryVariableName();
-            lines.add("%" + newAlias + " = load " + requiredType.getSimpleType().getLlvm() + ", " + type.getSimpleType().getLlvm() + "* -" + variable.name() + ", align 4");
+            String newAlias = "%" + functionContextRegistry.getNextTemporaryVariableName();
+            lines.add(newAlias + " = load " + requiredType.getSimpleType().getLlvm() + ", " + type.getSimpleType().getLlvm() + "* " + variable.name() + ", align 4");
             setAlias(newAlias);
         } else {
-            setAlias(variable.getName());
+            setAlias(variable.name());
         }
 
         functionContextRegistry.register(this, requiredType, false);

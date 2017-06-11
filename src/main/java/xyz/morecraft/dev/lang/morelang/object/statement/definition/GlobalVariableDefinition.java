@@ -25,7 +25,7 @@ public class GlobalVariableDefinition extends Definition {
     public List<String> llvm(FunctionContextRegistry functionContextRegistry) {
         final List<String> lines = new ArrayList<>();
 
-        lines.add("@" + getTypedIdentifier().getName() + " " + getTypedIdentifier().getType().getSimpleType().getLlvm() + " " + value + ", align 4");
+        lines.add("@" + getTypedIdentifier().getName() + " = global " + getTypedIdentifier().getType().getSimpleType().getLlvm() + " " + value + ", align 4");
 
         return lines;
     }

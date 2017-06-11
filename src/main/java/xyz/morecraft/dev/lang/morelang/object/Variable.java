@@ -15,6 +15,9 @@ public class Variable {
     private String alias;
     private Expression arrayIndexExpression;
 
+    private boolean global;
+    private Type type;
+
     public Variable(String name, Expression arrayIndexExpression) {
         this.name = name;
         this.arrayIndexExpression = arrayIndexExpression;
@@ -25,7 +28,7 @@ public class Variable {
     }
 
     public String name() {
-        return Objects.isNull(alias) ? name : alias;
+        return (isGlobal() ? "@" : "%") + (Objects.isNull(alias) ? name : alias);
     }
 
 }
