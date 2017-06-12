@@ -36,7 +36,7 @@ public class FunctionInvocationExpression extends Expression {
 
         String tmpAlias = functionContextRegistry.getNextTemporaryVariableName();
 
-        setAlias(tmpAlias);
+        setAlias("%" + tmpAlias);
 
         lines.add(
                 "%" + tmpAlias + " = call "

@@ -38,7 +38,7 @@ public class VariableDefinition extends Definition {
 
         if (Objects.nonNull(content)) {
             lines.addAll(content.llvm(functionContextRegistry, getTypedIdentifier().getType(), this, null));
-            lines.add("store " + getTypedIdentifier().getType().getSimpleType().getLlvm() + " %" + content.getAlias() + ", " + getTypedIdentifier().getType().getSimpleType().getLlvm() + "* %" + getTypedIdentifier().name() + ", align 4");
+            lines.add("store " + getTypedIdentifier().getType().getSimpleType().getLlvm() + " " + content.getAlias() + ", " + getTypedIdentifier().getType().getSimpleType().getLlvm() + "* %" + getTypedIdentifier().name() + ", align 4");
         }
 
         return lines;

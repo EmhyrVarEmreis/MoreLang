@@ -26,6 +26,18 @@ int funnnn() {
     return function(8, 9);
 }
 
+int fib(int n) {
+    int e = 0;
+    if(n == 0) {
+        e = 0;
+    } else if(n == 1) {
+        e = 1;
+    } else {
+        e = fib(n-1)+fib(n-2);
+    }
+    return e;
+}
+
 int main() {
     int a;
     a = 4;
@@ -33,5 +45,6 @@ int main() {
     while (a < limit) {
         a = a + 1;
     }
+    a = fib(2);
     return a;
 }
