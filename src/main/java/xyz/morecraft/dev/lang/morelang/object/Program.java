@@ -9,7 +9,6 @@ import xyz.morecraft.dev.lang.morelang.object.statement.definition.GlobalVariabl
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -28,14 +27,24 @@ public class Program {
         this.programRegistry = new ProgramRegistry(globalVariableDefinitionList, functionDefinitionList);
     }
 
-    public String llvm() {
-        return globalVariableDefinitionList.stream()
-                .map(globalVariableDefinition -> globalVariableDefinition.llvm(null).stream().collect(Collectors.joining("\n")))
-                .collect(Collectors.joining("\n"))
-                + "\n\n\n" +
-                functionDefinitionList.stream()
-                        .map(functionDefinition -> functionDefinition.llvm(programRegistry))
-                        .collect(Collectors.joining("\n\n"));
+    public List<String> llvm() {
+        List<String> lines = new ArrayList<>();
+
+        for (GlobalVariableDefinition globalVariableDefinition : globalVariableDefinitionList) {
+            lines.addAll(globalVariableDefinition.llvm(null));
+        }
+
+        for (FunctionDefinition functionDefinition : functionDefinitionList) {
+            lines.addAll(functionDefinition.llvm(programRegistry));
+        }
+
+        for (FunctionDefinition functionDefinition : programRegistry.getInternalFunctionDefinitions()) {
+            if (functionDefinition.isUsed()) {
+                lines.add(functionDefinition.getRawHeader());
+            }
+        }
+
+        return lines;
     }
 
 }

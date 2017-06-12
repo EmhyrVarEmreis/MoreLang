@@ -3,6 +3,7 @@ package xyz.morecraft.dev.lang.morelang.object.statement.definition;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import xyz.morecraft.dev.lang.morelang.object.Type;
 import xyz.morecraft.dev.lang.morelang.object.TypedIdentifier;
 import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
 import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
@@ -37,7 +38,9 @@ public class VariableDefinition extends Definition {
         lines.add("%" + getTypedIdentifier().getName() + " = alloca " + getTypedIdentifier().getType().getSimpleType().getLlvm() + ", align 4");
 
         if (Objects.nonNull(content)) {
-            lines.addAll(content.llvm(functionContextRegistry, getTypedIdentifier().getType(), this, null));
+            final Type typeCopy = Type.of(getTypedIdentifier().getType());
+            typeCopy.setPointer(false);
+            lines.addAll(content.llvm(functionContextRegistry, typeCopy, this, null));
             lines.add("store " + getTypedIdentifier().getType().getSimpleType().getLlvm() + " " + content.getAlias() + ", " + getTypedIdentifier().getType().getSimpleType().getLlvm() + "* %" + getTypedIdentifier().name() + ", align 4");
         }
 

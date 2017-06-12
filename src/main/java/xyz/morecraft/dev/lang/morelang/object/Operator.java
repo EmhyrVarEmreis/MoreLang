@@ -13,6 +13,7 @@ public enum Operator {
     MINUS("-", OperatorType.ARITHMETICAL, "sub"),
     MULTIPLY("*", OperatorType.ARITHMETICAL, "mul"),
     DIVISION("/", OperatorType.ARITHMETICAL, "div"),
+    MODULO("%", OperatorType.ARITHMETICAL, "srem"),
     COMPARE_EQ("==", OperatorType.LOGICAL, "eq"),
     COMPARE_NEQ("!=", OperatorType.LOGICAL, "neq"),
     COMPARE_GT(">", OperatorType.LOGICAL, "sgt"),
@@ -34,6 +35,8 @@ public enum Operator {
             case MULTIPLY:
             case DIVISION:
                 return Collections.singletonList(alias + " = " + llvm + " nsw " + requiredType.getSimpleType().getLlvm() + " " + leftAlias + ", " + rightAlias);
+            case MODULO:
+                return Collections.singletonList(alias + " = " + llvm + " " + requiredType.getSimpleType().getLlvm() + " " + leftAlias + ", " + rightAlias);
             case COMPARE_EQ:
             case COMPARE_NEQ:
             case COMPARE_GT:

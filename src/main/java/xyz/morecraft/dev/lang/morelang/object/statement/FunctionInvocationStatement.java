@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
+import xyz.morecraft.dev.lang.morelang.object.expression.FunctionInvocationExpression;
 import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class FunctionInvocationStatement extends Statement {
 
     @Override
     public List<String> llvm(FunctionContextRegistry functionContextRegistry) {
-        return new ArrayList<>();
+        return new FunctionInvocationExpression(this, true).llvm(functionContextRegistry, null, this, null);
     }
 
 }

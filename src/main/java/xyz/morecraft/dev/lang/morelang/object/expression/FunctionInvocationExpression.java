@@ -19,32 +19,60 @@ import java.util.List;
 public class FunctionInvocationExpression extends Expression {
 
     private FunctionInvocationStatement invocation;
+    private boolean isStatement;
 
     @Override
     public List<String> llvm(FunctionContextRegistry functionContextRegistry, Type requiredType, Statement statementContext, Expression expressionContext) {
-        List<String> lines = new ArrayList<>();
+        final List<String> lines = new ArrayList<>();
 
-        FunctionDefinition functionDefinition = functionContextRegistry.getProgramRegistry().getFunctionDefinition(invocation.getName());
+        final FunctionDefinition functionDefinition = functionContextRegistry.getProgramRegistry().getFunctionDefinition(invocation.getName());
 
-        StringBuilder args = new StringBuilder();
+        if (invocation.getName().equals("putchar")) {
+            System.out.println("g");
+        }
+
+        final StringBuilder args = new StringBuilder();
         for (int i = 0; i < invocation.getArgumentExpressionList().size(); i++) {
-            Expression expression = invocation.getArgumentExpressionList().get(i);
-            TypedIdentifier typedIdentifier = functionDefinition.getArgumentList().get(i);
-            lines.addAll(expression.llvm(functionContextRegistry, requiredType, null, this));
+            final Expression expression = invocation.getArgumentExpressionList().get(i);
+            final TypedIdentifier typedIdentifier = functionDefinition.getArgumentList().get(i);
+            final Type type = Type.of(typedIdentifier.getType());
+            type.setPointer(false);
+            lines.addAll(expression.llvm(functionContextRegistry, type, null, this));
             args.append(", ").append(typedIdentifier.getType().getSimpleType().getLlvm()).append(" ").append(expression.getAlias());
         }
 
-        String tmpAlias = functionContextRegistry.getNextTemporaryVariableName();
+        String preparedName;
+        if (functionDefinition.isInternal()) {
+            preparedName = functionDefinition.getPreparedHeader();
+        } else {
+            preparedName = "@" + invocation.getName();
+        }
 
-        setAlias("%" + tmpAlias);
+        setAlias("%" + functionContextRegistry.getNextTemporaryVariableName());
 
-        lines.add(
-                "%" + tmpAlias + " = call "
-                        + functionDefinition.getTypedIdentifier().getType().getSimpleType().getLlvm()
-                        + " @" + invocation.getName() + "( " + args.substring(args.length() == 0 ? 0 : 2) + " )"
-        );
-
-        functionContextRegistry.register(this, functionDefinition.getTypedIdentifier().getType(), false);
+        if (isStatement) {
+            lines.add(
+                    "call " +
+                            functionDefinition.getTypedIdentifier().getType().getSimpleType().getLlvm() +
+                            " " +
+                            preparedName +
+                            "( " +
+                            args.substring(args.length() == 0 ? 0 : 2) +
+                            " )"
+            );
+        } else {
+            lines.add(
+                    getAlias() +
+                            " = call " +
+                            functionDefinition.getTypedIdentifier().getType().getSimpleType().getLlvm() +
+                            " " +
+                            preparedName +
+                            "( " +
+                            args.substring(args.length() == 0 ? 0 : 2) +
+                            " )"
+            );
+            functionContextRegistry.register(this, functionDefinition.getTypedIdentifier().getType(), false);
+        }
 
         return lines;
     }

@@ -12,6 +12,7 @@ import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -42,7 +43,7 @@ public class Main {
         System.out.println();
         System.out.println();
 
-        String llvm = program.llvm();
+        String llvm = program.llvm().stream().collect(Collectors.joining("\n"));
 
         System.out.println(llvm);
 

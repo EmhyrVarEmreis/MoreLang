@@ -45,6 +45,10 @@ int main() {
     while (a < limit) {
         a = a + 1;
     }
-    a = fib(2);
+    int g = getchar();
+    g = g - 48;
+    a = fib(g);
+    int tmp = a % 10;
+    putchar(tmp + 48);
     return a;
 }

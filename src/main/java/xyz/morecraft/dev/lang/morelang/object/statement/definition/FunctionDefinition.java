@@ -21,12 +21,17 @@ public class FunctionDefinition extends Definition {
     private List<Statement> statementList = new ArrayList<>();
     private Expression returnStatement;
     private FunctionContextRegistry functionContextRegistry;
+    private boolean isInternal;
+    private boolean used;
+    private String rawHeader;
+    private String preparedHeader;
 
     public FunctionDefinition(TypedIdentifier typedIdentifier, List<TypedIdentifier> argumentList, List<Statement> statementList, Expression returnStatement) {
         super(typedIdentifier);
         this.argumentList = Objects.isNull(argumentList) ? new ArrayList<>() : argumentList;
         this.statementList = Objects.isNull(statementList) ? new ArrayList<>() : statementList;
         this.returnStatement = returnStatement;
+        this.isInternal = false;
     }
 
     @Override
@@ -34,34 +39,33 @@ public class FunctionDefinition extends Definition {
         throw new IllegalStateException("Illegal method");
     }
 
-    public String llvm(ProgramRegistry programRegistry) {
+    public List<String> llvm(ProgramRegistry programRegistry) {
+        List<String> lines = new ArrayList<>();
         System.out.println("\n\nfun: " + getTypedIdentifier().getName());
 
         functionContextRegistry = new FunctionContextRegistry(this, programRegistry, this.argumentList);
 
-        StringBuilder llvm = new StringBuilder();
-        llvm.append("define ");
-        llvm.append(getTypedIdentifier().getType().getSimpleType().getLlvm());
-        llvm.append(" @");
-        llvm.append(getTypedIdentifier().getName());
-        llvm.append("(");
-        if (Objects.nonNull(argumentList)) {
-            llvm.append(
-                    argumentList.stream().map(
-                            typedIdentifier -> typedIdentifier.getType().getSimpleType().getLlvm() + " %" + typedIdentifier.getName()
-                    ).collect(Collectors.joining(", "))
-            );
-        }
-        llvm.append(") {\n");
-//        llvm.append("entry: \n");
-        llvm.append(
-                generateFunctionBody().stream().map(
-                        s -> (s.endsWith(":") ? s : ("\t" + s)) + "\n"
-                ).collect(Collectors.joining())
+        lines.add(
+                "define " +
+                        getTypedIdentifier().getType().getSimpleType().getLlvm() +
+                        " @" +
+                        getTypedIdentifier().getName() +
+                        "(" +
+                        argumentList.stream().map(
+                                typedIdentifier -> typedIdentifier.getType().getSimpleType().getLlvm() + " %" + typedIdentifier.getName()
+                        ).collect(Collectors.joining(", ")) +
+                        ") {"
         );
-        llvm.append("}");
 
-        return llvm.toString();
+        lines.addAll(
+                generateFunctionBody().stream().map(
+                        s -> (s.endsWith(":") ? s : ("\t" + s))
+                ).collect(Collectors.toList())
+        );
+
+        lines.add("}");
+
+        return lines;
     }
 
     private List<String> generateFunctionBody() {

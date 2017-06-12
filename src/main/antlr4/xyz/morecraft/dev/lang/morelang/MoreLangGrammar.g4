@@ -84,7 +84,7 @@ operator:
     arithmeticOperator | logicalOperator | compareOperator;
 
 arithmeticOperator :
-    OP_PLUS | OP_MINUS | OP_DIVIDE | OP_MULTIPLY;
+    OP_PLUS | OP_MINUS | OP_DIVIDE | OP_MULTIPLY | OP_MODULO;
 
 logicalOperator :
     OP_LOGIC_AND | OP_LOGIC_OR;
@@ -114,6 +114,7 @@ OP_PLUS                 :   '+';
 OP_MINUS                :   '-';
 OP_DIVIDE               :   '/';
 OP_MULTIPLY             :   '*';
+OP_MODULO               :   '%';
 OP_COMPARE_EQ           :   '==';
 OP_COMPARE_NEQ          :   '!=';
 OP_COMPARE_GT           :   '>';

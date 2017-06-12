@@ -24,7 +24,8 @@ public class ExpressionVisitor extends MoreLangGrammarBaseVisitorCustom<Expressi
             );
         } else if (Objects.nonNull(atomicExpressionContext.functionInvocationStatement())) {
             return new FunctionInvocationExpression(
-                    atomicExpressionContext.functionInvocationStatement().accept(new FunctionInvocationStatementVisitor())
+                    atomicExpressionContext.functionInvocationStatement().accept(new FunctionInvocationStatementVisitor()),
+                    false
             );
         } else {
             throw new IllegalStateException("Compiler encountered serious error");
