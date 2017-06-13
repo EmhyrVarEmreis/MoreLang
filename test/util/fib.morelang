@@ -1,0 +1,11 @@
+int fib(int n) {
+    int e = 0;
+    if(n == 0) {
+        e = 0;
+    } else if(n == 1) {
+        e = 1;
+    } else {
+        e = fib(n-1)+fib(n-2);
+    }
+    return e;
+}

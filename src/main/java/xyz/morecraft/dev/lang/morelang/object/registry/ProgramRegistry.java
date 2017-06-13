@@ -48,7 +48,9 @@ public class ProgramRegistry {
 
     public FunctionDefinition getFunctionDefinition(String name) {
         final FunctionDefinition functionDefinition = functionDefinitionNameMap.getOrDefault(name, internalFunctionDefinitionNameMap.get(name));
-        functionDefinition.setUsed(true);
+        if (Objects.nonNull(functionDefinition)) {
+            functionDefinition.setUsed(true);
+        }
         return functionDefinition;
     }
 

@@ -4,7 +4,7 @@ program:
     programHeader? programBody;
 
 programBody :
-    (SEMICOLON | globalVariableDefinitionStatement)* (SEMICOLON | functionDefinition)*;
+    (SEMICOLON | (functionDefinition | globalVariableDefinitionStatement))*;
 
 body :
     (SEMICOLON | statement)+;

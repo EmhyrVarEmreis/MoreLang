@@ -8,10 +8,13 @@ public class FunctionInvocationStatementVisitor extends MoreLangGrammarBaseVisit
 
     @Override
     public FunctionInvocationStatement visitFunctionInvocationStatement(MoreLangGrammarParser.FunctionInvocationStatementContext ctx) {
-        return new FunctionInvocationStatement(
+        final FunctionInvocationStatement statement = new FunctionInvocationStatement(
                 ctx.identifier().getText(),
                 convert(ctx.functionInvocationArguments().expression(), new ExpressionVisitor())
         );
+        statement.setLine(ctx.getStart().getLine());
+        statement.setPos(ctx.getStart().getCharPositionInLine());
+        return statement;
     }
 
 }

@@ -7,7 +7,6 @@ import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
 import xyz.morecraft.dev.lang.morelang.object.expression.FunctionInvocationExpression;
 import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -20,7 +19,10 @@ public class FunctionInvocationStatement extends Statement {
 
     @Override
     public List<String> llvm(FunctionContextRegistry functionContextRegistry) {
-        return new FunctionInvocationExpression(this, true).llvm(functionContextRegistry, null, this, null);
+        final FunctionInvocationExpression expression = new FunctionInvocationExpression(this, true);
+        expression.setLine(getLine());
+        expression.setPos(getPos());
+        return expression.llvm(functionContextRegistry, null, this, null);
     }
 
 }
