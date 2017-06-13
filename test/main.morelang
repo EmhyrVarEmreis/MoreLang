@@ -41,6 +41,7 @@ int main() {
     int mult = 10;
     int tmp;
     do {
+        //putchar(dd);
         tmp = a % mult;
         putchar((tmp * 10 / mult) + 48);
         a = a - tmp;

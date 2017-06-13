@@ -31,28 +31,29 @@ public class WhileLoopStatement extends Statement {
                 functionContextRegistry.getNextTemporaryLabelName()
         };
 
-        List<String> conditionLlvm = conditionExpression.llvm(
-                functionContextRegistry,
-                new Type(SimpleType.BOOLEAN, false, false),
-                this,
-                null
-        );
-
-        List<String> statementsLlvm = bodyBlock.stream().flatMap(statement -> statement.llvm(functionContextRegistry).stream()).collect(Collectors.toList());
-
         lines.add("br label %" + labels[0]);
         lines.add(labels[0] + ":");
         if (isDo) {
-            lines.addAll(statementsLlvm);
+            lines.addAll(bodyBlock.stream().flatMap(statement -> statement.llvm(functionContextRegistry).stream()).collect(Collectors.toList()));
             lines.add("br label %" + labels[1]);
             lines.add(labels[1] + ":");
-            lines.addAll(conditionLlvm);
+            lines.addAll(conditionExpression.llvm(
+                    functionContextRegistry,
+                    new Type(SimpleType.BOOLEAN, false, false),
+                    this,
+                    null
+            ));
             lines.add("br i1 " + conditionExpression.getAlias() + ", label %" + labels[0] + ", label %" + labels[2]);
         } else {
-            lines.addAll(conditionLlvm);
+            lines.addAll(conditionExpression.llvm(
+                    functionContextRegistry,
+                    new Type(SimpleType.BOOLEAN, false, false),
+                    this,
+                    null
+            ));
             lines.add("br i1 " + conditionExpression.getAlias() + ", label %" + labels[1] + ", label %" + labels[2]);
             lines.add(labels[1] + ":");
-            lines.addAll(statementsLlvm);
+            lines.addAll(bodyBlock.stream().flatMap(statement -> statement.llvm(functionContextRegistry).stream()).collect(Collectors.toList()));
             lines.add("br label %" + labels[0]);
         }
         lines.add(labels[2] + ":");
