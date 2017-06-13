@@ -32,8 +32,6 @@ public class AssignmentStatement extends Statement {
         Type requiredType = Type.of(type);
         requiredType.setPointer(false);
 
-        System.out.println("assign " + functionContextRegistry.getParent().getTypedIdentifier().getName() + " " + variable + " \t" + type);
-
         lines.addAll(expression.llvm(functionContextRegistry, requiredType, this, null));
 
         lines.add("store " + type.getSimpleType().getLlvm() + " " + expression.getAlias() + ", " + type.getSimpleType().getLlvm() + "* " + variable.name() + ", align 4");

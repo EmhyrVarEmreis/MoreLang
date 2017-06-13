@@ -3,6 +3,7 @@ package xyz.morecraft.dev.lang.morelang.object.expression;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import xyz.morecraft.dev.lang.morelang.exception.UndefinedFunctionException;
 import xyz.morecraft.dev.lang.morelang.object.Type;
 import xyz.morecraft.dev.lang.morelang.object.TypedIdentifier;
 import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
@@ -12,6 +13,7 @@ import xyz.morecraft.dev.lang.morelang.object.statement.definition.FunctionDefin
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -27,8 +29,8 @@ public class FunctionInvocationExpression extends Expression {
 
         final FunctionDefinition functionDefinition = functionContextRegistry.getProgramRegistry().getFunctionDefinition(invocation.getName());
 
-        if (invocation.getName().equals("putchar")) {
-            System.out.println("g");
+        if (Objects.isNull(functionDefinition)) {
+            throw new UndefinedFunctionException(this, invocation.getName());
         }
 
         final StringBuilder args = new StringBuilder();

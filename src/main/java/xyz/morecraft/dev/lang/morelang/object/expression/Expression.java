@@ -1,6 +1,7 @@
 package xyz.morecraft.dev.lang.morelang.object.expression;
 
 import lombok.Data;
+import xyz.morecraft.dev.lang.morelang.object.ParsedElement;
 import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.Type;
 import xyz.morecraft.dev.lang.morelang.object.statement.Statement;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Data
-public abstract class Expression {
+public abstract class Expression extends ParsedElement {
 
     private String alias;
 

@@ -33,8 +33,6 @@ public class VariableDefinition extends Definition {
         getTypedIdentifier().getType().setPointer(true);
         functionContextRegistry.register(getTypedIdentifier(), false);
 
-        System.out.println("vardef " + functionContextRegistry.getParent().getTypedIdentifier().getName() + " " + getTypedIdentifier().getName() + " \t" + getTypedIdentifier().getType());
-
         lines.add("%" + getTypedIdentifier().getName() + " = alloca " + getTypedIdentifier().getType().getSimpleType().getLlvm() + ", align 4");
 
         if (Objects.nonNull(content)) {

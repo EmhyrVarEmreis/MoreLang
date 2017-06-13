@@ -41,7 +41,6 @@ public class FunctionDefinition extends Definition {
 
     public List<String> llvm(ProgramRegistry programRegistry) {
         List<String> lines = new ArrayList<>();
-        System.out.println("\n\nfun: " + getTypedIdentifier().getName());
 
         functionContextRegistry = new FunctionContextRegistry(this, programRegistry, this.argumentList);
 

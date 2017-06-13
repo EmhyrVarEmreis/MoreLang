@@ -14,22 +14,26 @@ public class ExpressionVisitor extends MoreLangGrammarBaseVisitorCustom<Expressi
     @Override
     public Expression visitSmallExpression(MoreLangGrammarParser.SmallExpressionContext ctx) {
         MoreLangGrammarParser.AtomicExpressionContext atomicExpressionContext = ctx.atomicExpression();
+        Expression expression;
         if (Objects.nonNull(atomicExpressionContext.value())) {
-            return new ValueExpression(
+            expression = new ValueExpression(
                     atomicExpressionContext.value().getText()
             );
         } else if (Objects.nonNull(atomicExpressionContext.variable())) {
-            return new VariableExpression(
+            expression = new VariableExpression(
                     atomicExpressionContext.variable().accept(new VariableVisitor())
             );
         } else if (Objects.nonNull(atomicExpressionContext.functionInvocationStatement())) {
-            return new FunctionInvocationExpression(
+            expression = new FunctionInvocationExpression(
                     atomicExpressionContext.functionInvocationStatement().accept(new FunctionInvocationStatementVisitor()),
                     false
             );
         } else {
             throw new IllegalStateException("Compiler encountered serious error");
         }
+        expression.setLine(ctx.getStart().getLine());
+        expression.setPos(ctx.getStart().getCharPositionInLine());
+        return expression;
     }
 
     @Override

@@ -2,6 +2,8 @@ package xyz.morecraft.dev.lang.morelang.object;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import xyz.morecraft.dev.lang.morelang.exception.UnknownOperatorException;
+import xyz.morecraft.dev.lang.morelang.object.expression.Expression;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -4,12 +4,14 @@ package xyz.morecraft.dev.lang.morelang.object.expression;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import xyz.morecraft.dev.lang.morelang.exception.UndefinedVariableException;
 import xyz.morecraft.dev.lang.morelang.object.Type;
 import xyz.morecraft.dev.lang.morelang.object.Variable;
 import xyz.morecraft.dev.lang.morelang.object.registry.FunctionContextRegistry;
 import xyz.morecraft.dev.lang.morelang.object.statement.AssignmentStatement;
 import xyz.morecraft.dev.lang.morelang.object.statement.Statement;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,13 +29,12 @@ public class VariableExpression extends Expression {
 
         functionContextRegistry.updateVariable(variable);
 
-        if (statementContext instanceof AssignmentStatement) {
-            System.out.println("\tvar: \t\t\t" + variable.getName());
-            System.out.println("\trequiredType:\t" + requiredType);
-            System.out.println("\ttype: \t\t\t" + functionContextRegistry.getType(variable.getName()));
+        Type type = functionContextRegistry.getType(variable.getName());
+
+        if (Objects.isNull(type)) {
+            throw new UndefinedVariableException(this, variable.getName());
         }
 
-        Type type = functionContextRegistry.getType(variable.getName());
         if (Objects.nonNull(requiredType) && !requiredType.equals(type)) {
             String newAlias = "%" + functionContextRegistry.getNextTemporaryVariableName();
             lines.add(newAlias + " = load " + requiredType.getSimpleType().getLlvm() + ", " + type.getSimpleType().getLlvm() + "* " + variable.name() + ", align 4");

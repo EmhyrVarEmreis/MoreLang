@@ -101,12 +101,11 @@ public class FunctionContextRegistry {
     }
 
     public void updateVariable(Variable variable) {
-        final RegisteredVariable registeredVariable = registeredVariableMap.getOrDefault(
-                variable.getName(),
-                new RegisteredVariable(variable.getName(), variable.getName(), false, null)
-        );
-        variable.setAlias(registeredVariable.getAlias());
-        variable.setType(registeredVariable.getType());
-        variable.setGlobal(registeredVariable.isGlobal());
+        final RegisteredVariable registeredVariable = registeredVariableMap.get(variable.getName());
+        if (Objects.nonNull(registeredVariable)) {
+            variable.setAlias(registeredVariable.getAlias());
+            variable.setType(registeredVariable.getType());
+            variable.setGlobal(registeredVariable.isGlobal());
+        }
     }
 }
