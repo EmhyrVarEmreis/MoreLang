@@ -6,7 +6,6 @@ import xyz.morecraft.dev.lang.morelang.exception.MoreLangParseException;
 import xyz.morecraft.dev.lang.morelang.object.Program;
 import xyz.morecraft.dev.lang.morelang.visitor.ProgramVisitor;
 
-import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
@@ -63,8 +62,11 @@ public class Main {
         System.out.println("Compiling to LLVM...");
 
         try {
-            String llvm = program.llvm().stream().collect(Collectors.joining("\n"));
-            Files.write(Paths.get(args[0].replace(ext, "") + ".ll"), Collections.singletonList(llvm));
+            final String llvm = program.llvm().stream().collect(Collectors.joining("\n"));
+            final String llvmFile = args[0].replace(ext, "") + ".ll";
+            Files.write(Paths.get(llvmFile), Collections.singletonList(llvm));
+            System.out.println("Compiling executable...");
+            Runtime.getRuntime().exec("clang " + llvmFile);
         } catch (MoreLangParseException e) {
             System.err.println(e.getMessage());
             System.err.println("Compilation aborted due to errors");
