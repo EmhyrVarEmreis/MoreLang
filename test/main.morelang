@@ -42,7 +42,7 @@ int main() {
     int tmp;
     do {
         tmp = a % mult;
-        putchar(tmp + 48);
+        putchar((tmp * 10 / mult) + 48);
         a = a - tmp;
         mult = mult * 10;
     } while(a > 0);
