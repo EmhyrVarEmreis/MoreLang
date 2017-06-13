@@ -38,7 +38,13 @@ int main() {
     int g = getchar();
     g = g - 48;
     a = fib(g);
-    int tmp = a % 10;
-    putchar(tmp + 48);
+    int mult = 10;
+    int tmp;
+    do {
+        tmp = a % mult;
+        putchar(tmp + 48);
+        a = a - tmp;
+        mult = mult * 10;
+    } while(a > 0);
     return a;
 }

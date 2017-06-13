@@ -22,13 +22,16 @@ ctrlImportName:
     ID (CTRL_DOT ID)*;
 
 statement :
-    ((assignmentStatement | functionInvocationStatement) SEMICOLON) | variableDefinitionStatement | ifStatement | whileLoopStatement;
+    ((assignmentStatement | functionInvocationStatement) SEMICOLON) | variableDefinitionStatement | ifStatement | whileLoopStatement | doWhileLoopStatement;
 
 ifStatement :
     CTRL_IF BRACKET_PAREN_OP expression BRACKET_PAREN_CLOSE bodyBlock (CTRL_ELSE (bodyBlock | ifStatement))?;
 
 whileLoopStatement :
     CTRL_WHILE BRACKET_PAREN_OP expression BRACKET_PAREN_CLOSE bodyBlock;
+
+doWhileLoopStatement :
+    CTRL_DO bodyBlock CTRL_WHILE BRACKET_PAREN_OP expression BRACKET_PAREN_CLOSE;
 
 variableDefinitionStatement :
     typedIdentifier TAB_SUFFIX? (EQUAL expression)? SEMICOLON;
@@ -99,6 +102,7 @@ CTRL_RETURN             :   'return';
 CTRL_IF                 :   'if';
 CTRL_ELSE               :   'else';
 CTRL_WHILE              :   'while';
+CTRL_DO                 :   'do';
 CTRL_DOT                :   '.';
 CTRL_GLOBAL             :   'global';
 
